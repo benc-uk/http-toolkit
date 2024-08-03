@@ -72,12 +72,11 @@ test: ## 🧪 Run unit tests
 
 test-integration: ## 🔬 Run integration & API tests
 	@figlet $@ || true
-	make run &
-	sleep 5
-	@echo "Running integration tests..."
-	npx httpyac api/test.http --all
-	@echo "Integration tests complete"
-	kill -9 $(shell lsof -t -i:8080)
+	kill -9 $(shell lsof -t -i:8080) || true
+	go run ./cmd/*.go &
+	sleep 2
+	npx httpyac api/test.http --all --bail
+	kill -9 $(shell lsof -t -i:8080) || true
 
 check-vars:
 	@if [[ -z "${IMAGE_REG}" ]]; then echo "💥 Error! Required variable IMAGE_REG is not set!"; exit 1; fi

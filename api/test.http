@@ -7,13 +7,21 @@
 
 GET http://localhost:8080
 
+?? status == 200
+
 ### System info
 
 GET http://localhost:8080/info
 
+?? status == 200
+?? body includes uptime
+
 ### Request inspection GET
 
 GET http://localhost:8080/inspect
+
+?? status == 200
+?? body includes GET
 
 ### Request inspection POST
 
@@ -25,15 +33,31 @@ Content-Type: application/json
   "age": 42
 }
 
+?? status == 200
+?? body includes Dave
+
 ### System health
 
 GET http://localhost:8080/health
 
+?? status == 200
+?? body includes OK
 
 ### Random numbers
 
 GET http://localhost:8080/number/5000
 
+?? status == 200
+
 ### Random words
 
 GET http://localhost:8080/word/4
+
+?? status == 200
+
+
+### Status code
+
+GET http://localhost:8080/status/418
+
+?? status == 418
