@@ -19,6 +19,11 @@ linters:
     - tagliatelle # Find badly named struct tags
     #- gomnd       # Find magic numbers, enable at your peril
 
+issues:
+  exclude-files:
+    # Test files are skipped
+    - ".*_test\\.go$"
+
 linters-settings:
   gosec:
     excludes:
