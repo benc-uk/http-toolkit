@@ -1,3 +1,5 @@
 tmp/
 .tools/
-bin/
+bin/**
+*.xml
+report/**

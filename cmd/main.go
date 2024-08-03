@@ -20,12 +20,14 @@ func main() {
 	}
 
 	reqDebug = true
+
 	reqDebugEnv := strings.ToLower(os.Getenv("REQUEST_DEBUG"))
 	if reqDebugEnv == "false" {
 		reqDebug = false
 	}
 
 	bodyDebug = true
+
 	bodyDebugEnv := strings.ToLower(os.Getenv("BODY_DEBUG"))
 	if bodyDebugEnv == "false" {
 		bodyDebug = false
@@ -50,10 +52,17 @@ func main() {
 	mux.HandleFunc("GET /number/{max}", randomNumber)
 	mux.HandleFunc("GET /number", randomNumber)
 
+	// Wrap the mux with the logger middleware
 	loggerMux := NewLogger(mux)
 
+	server := &http.Server{
+		Addr:              ":" + portEnv,
+		ReadHeaderTimeout: 3 * time.Second,
+		Handler:           loggerMux,
+	}
+
 	log.Println("HTTP Debugger started on port " + portEnv)
-	log.Fatal(http.ListenAndServe(":"+portEnv, loggerMux))
+	log.Fatal(server.ListenAndServe())
 }
 
 // Logger is a middleware handler that does request logging
@@ -67,11 +76,13 @@ func (l *Logger) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 
 	log.Printf("%s %s %v", r.Method, r.URL.Path, time.Since(start))
+
 	if reqDebug {
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
-		enc.Encode(newRequestDetails(r))
+		_ = enc.Encode(newRequestDetails(r))
 	}
+
 	l.handler.ServeHTTP(w, r)
 }
 

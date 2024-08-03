@@ -9,8 +9,16 @@ on:
   pull_request:
     branches: ["main"]
 
+permissions:
+  statuses: write
+  checks: write
+  contents: write
+  pull-requests: write
+  actions: write
+
 jobs:
   test-lint-build:
+    name: Test, Lint & Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,19 +26,39 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.20"
+          go-version: "1.22.1"
 
       - name: Prepare
-        run: make tools-install
+        run: make install-tools
 
       - name: Lint
         run: make lint
 
       - name: Unit Tests
-        run: make test
+        run: make test-report
 
       - name: Integration Tests
-        run: make test-integration
+        run: make test-api-report
+
+      - name: Test Reporting - Integration
+        uses: phoenix-actions/test-reporting@v8
+        id: test-report
+        if: success() || failure()
+        with:
+          name: Integration Test Report
+          path: report/api-tests.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Test Reporting - Unit
+        uses: phoenix-actions/test-reporting@v8
+        id: test-report-unit
+        if: success() || failure()
+        with:
+          name: Unit Test Report
+          path: report/unit-tests.xml
+          reporter: java-junit
+          fail-on-error: false
 
       - name: Build
         run: make build

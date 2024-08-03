@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -31,24 +30,26 @@ func inspect(w http.ResponseWriter, r *http.Request) {
 
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
-	enc.Encode(newRequestDetails(r))
+	_ = enc.Encode(newRequestDetails(r))
 }
 
 func ok(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" && r.URL.Path != "/health" {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("Not Found"))
+		_, _ = w.Write([]byte("Not Found"))
+
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	_, _ = w.Write([]byte("OK"))
 }
 
 func systemInfo(w http.ResponseWriter, r *http.Request) {
 	host, _ := sysinfo.Host()
 	mem, err := host.Memory()
 	memString := "Unknown"
+
 	if err == nil {
 		memString = fmt.Sprintf("%dGB", mem.Total/1000/1000/1000)
 	}
@@ -69,7 +70,7 @@ func systemInfo(w http.ResponseWriter, r *http.Request) {
 
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
-	enc.Encode(info)
+	_ = enc.Encode(info)
 }
 
 func statusCode(w http.ResponseWriter, r *http.Request) {
@@ -77,7 +78,6 @@ func statusCode(w http.ResponseWriter, r *http.Request) {
 	if code == "" {
 		code = "200"
 	}
-	log.Println("Status code:", code)
 
 	status, err := strconv.Atoi(code)
 	if err != nil {
@@ -85,7 +85,7 @@ func statusCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(status)
-	w.Write([]byte(http.StatusText(status)))
+	_, _ = w.Write([]byte(http.StatusText(status)))
 }
 
 func randomWord(w http.ResponseWriter, r *http.Request) {
@@ -97,17 +97,19 @@ func randomWord(w http.ResponseWriter, r *http.Request) {
 	countInt, err := strconv.Atoi(count)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid count value"))
+		_, _ = w.Write([]byte("Invalid count value"))
+
 		return
 	}
 
 	// Generate a random words and append them to a string
 	wordsOut := ""
 	for i := 0; i < countInt; i++ {
+		//nolint:gosec
 		wordsOut += words[rand.Intn(len(words))] + " "
 	}
 
-	w.Write([]byte(wordsOut))
+	_, _ = w.Write([]byte(wordsOut))
 }
 
 func randomNumber(w http.ResponseWriter, r *http.Request) {
@@ -119,11 +121,14 @@ func randomNumber(w http.ResponseWriter, r *http.Request) {
 	maxInt, err := strconv.Atoi(max)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid max value"))
+		_, _ = w.Write([]byte("Invalid max value"))
+
 		return
 	}
 
 	// Generate a random number between 0 and max
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(strconv.Itoa(rand.Intn(maxInt))))
+
+	//nolint:sec
+	_, _ = w.Write([]byte(strconv.Itoa(rand.Intn(maxInt))))
 }

@@ -15,8 +15,11 @@ Supporting technologies and libraries:
 ![](https://img.shields.io/github/last-commit/benc-uk/http-toolkit)
 ![](https://img.shields.io/github/release/benc-uk/http-toolkit)
 ![](https://img.shields.io/github/checks-status/benc-uk/http-toolkit/main)
-![](https://img.shields.io/github/workflow/status/benc-uk/http-toolkit/CI%20Build?label=ci-build)
-![](https://img.shields.io/github/workflow/status/benc-uk/http-toolkit/Release%20Assets?label=release)
+![](https://img.shields.io/github/actions/workflow/status/benc-uk/http-toolkit/ci-build.yaml?label=ci-build)
+
+## 📦 Quick Deploy
+
+## 🏹 Usage
 
 ## 🧑‍💻 Local Development
 

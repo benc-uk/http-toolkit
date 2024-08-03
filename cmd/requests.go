@@ -13,9 +13,9 @@ import (
 type RequestDetails struct {
 	Method     string            `json:"method,omitempty"`
 	Path       string            `json:"path,omitempty"`
-	RemoteAddr string            `json:"remoteAddress,omitempty"`
+	RemoteAddr string            `json:"remoteAddr,omitempty"`
 	Headers    map[string]string `json:"headers,omitempty"`
-	Query      map[string]string `json:"queryParams,omitempty"`
+	Query      map[string]string `json:"query,omitempty"`
 	Body       string            `json:"body,omitempty"`
 	Timestamp  string            `json:"timestamp,omitempty"`
 }
@@ -33,12 +33,14 @@ func newRequestDetails(r *http.Request) RequestDetails {
 	}
 
 	bodyStr := ""
+
 	if bodyDebug {
 		// Read the body if bodyDebug is enabled
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
 		}
+
 		bodyStr = string(body)
 
 		// Reset the body so it can be read again!

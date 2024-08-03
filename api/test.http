@@ -1,23 +1,32 @@
 #
-# Install the REST Client extension in VS Code to run these requests
-# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+# Install the httpyac extension for Visual Studio Code to run these tests.
+# https://marketplace.visualstudio.com/items?itemName=anoff.httpyac
 #
 
 ### Root URL
+GET http://{{ENDPOINT}}
 
-GET http://localhost:8080
+?? status == 200
+
 
 ### System info
+GET http://{{ENDPOINT}}/info
 
-GET http://localhost:8080/info
+?? status == 200
+?? body uptime isString
+?? body cpuCount isNumber
+
 
 ### Request inspection GET
+GET http://{{ENDPOINT}}/inspect
 
-GET http://localhost:8080/inspect
+?? status == 200
+?? body remoteAddr isString
+?? body method == GET
+
 
 ### Request inspection POST
-
-POST http://localhost:8080/inspect
+POST http://{{ENDPOINT}}/inspect
 Content-Type: application/json
 
 {
@@ -25,15 +34,33 @@ Content-Type: application/json
   "age": 42
 }
 
-### System health
+?? status == 200
+?? body body includes Dave
+?? body method == POST
 
-GET http://localhost:8080/health
+
+### System health
+GET http://{{ENDPOINT}}/health
+
+?? status == 200
+?? body includes OK
 
 
 ### Random numbers
+GET http://{{ENDPOINT}}/number/5000
 
-GET http://localhost:8080/number/5000
+?? status == 200
+?? body matches ^\d+
+
 
 ### Random words
+GET http://{{ENDPOINT}}/word/4
 
-GET http://localhost:8080/word/4
+?? status == 200
+?? body matches ^\D+
+
+
+### Status code
+GET http://{{ENDPOINT}}/status/418
+
+?? status == 418
