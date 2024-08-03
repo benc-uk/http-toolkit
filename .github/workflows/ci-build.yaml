@@ -30,7 +30,16 @@ jobs:
         run: make test
 
       - name: Integration Tests
-        run: make test-integration
+        run: make test-integration-report
+
+      - name: Test Report
+        uses: phoenix-actions/test-reporting@v8
+        id: test-report
+        if: success() || failure()
+        with:
+          name: Integration Tests
+          path: test-results.xml
+          reporter: jest-junit
 
       - name: Build
         run: make build

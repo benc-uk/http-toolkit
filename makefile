@@ -72,11 +72,18 @@ test: ## 🧪 Run unit tests
 
 test-integration: ## 🔬 Run integration & API tests
 	@figlet $@ || true
-	kill -9 $(shell lsof -t -i:8080) || true
+	kill -9 $(shell lsof -t -i:8080) > /dev/null 2>&1 || true
 	go run ./cmd/*.go &
 	sleep 2
-	npx httpyac api/test.http --all --bail
-	kill -9 $(shell lsof -t -i:8080) || true
+	npx httpyac api/test.http --all --quiet --bail
+	kill -9 $(shell lsof -t -i:8080) > /dev/null 2>&1 || true
+
+test-integration-report: ## 📜 Run integration & API tests with XML report
+	kill -9 $(shell lsof -t -i:8080) > /dev/null 2>&1 || true
+	go run ./cmd/*.go &
+	sleep 2
+	npx httpyac api/test.http --all --quiet --junit > test-results.xml
+	kill -9 $(shell lsof -t -i:8080) > /dev/null 2>&1 || true
 
 check-vars:
 	@if [[ -z "${IMAGE_REG}" ]]; then echo "💥 Error! Required variable IMAGE_REG is not set!"; exit 1; fi
