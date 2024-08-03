@@ -66,6 +66,19 @@ release: ## 🚀 Release a new version on GitHub
 	--notes-file docs/release-notes.md \
 	--latest 
 
+test: ## 🧪 Run unit tests
+	@figlet $@ || true
+	go test -v ./...
+
+test-integration: ## 🔬 Run integration & API tests
+	@figlet $@ || true
+	make run &
+	sleep 5
+	@echo "Running integration tests..."
+	npx httpyac api/test.http --all
+	@echo "Integration tests complete"
+	kill -9 $(shell lsof -t -i:8080)
+
 check-vars:
 	@if [[ -z "${IMAGE_REG}" ]]; then echo "💥 Error! Required variable IMAGE_REG is not set!"; exit 1; fi
 	@if [[ -z "${IMAGE_NAME}" ]]; then echo "💥 Error! Required variable IMAGE_NAME is not set!"; exit 1; fi
