@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -79,8 +78,6 @@ func statusCode(w http.ResponseWriter, r *http.Request) {
 	if code == "" {
 		code = "200"
 	}
-
-	log.Println("Status code:", code)
 
 	status, err := strconv.Atoi(code)
 	if err != nil {

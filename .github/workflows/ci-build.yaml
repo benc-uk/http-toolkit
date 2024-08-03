@@ -34,18 +34,28 @@ jobs:
         run: make lint
 
       - name: Unit Tests
-        run: make test
+        run: make test-report
 
       - name: Integration Tests
         run: make test-integration-report
 
-      - name: Test Reporting
+      - name: Test Reporting - Integration
         uses: phoenix-actions/test-reporting@v8
         id: test-report
         if: success() || failure()
         with:
           name: Integration Test Report
-          path: test-results.xml
+          path: report/api-tests.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Test Reporting - Unit
+        uses: phoenix-actions/test-reporting@v8
+        id: test-report-unit
+        if: success() || failure()
+        with:
+          name: Unit Test Report
+          path: report/unit-tests.xml
           reporter: java-junit
           fail-on-error: false
 
