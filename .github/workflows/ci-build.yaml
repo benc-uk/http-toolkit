@@ -37,7 +37,7 @@ jobs:
         run: make test-report
 
       - name: Integration Tests
-        run: make test-integration-report
+        run: make test-api-report
 
       - name: Test Reporting - Integration
         uses: phoenix-actions/test-reporting@v8
