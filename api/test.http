@@ -1,0 +1,39 @@
+#
+# Install the REST Client extension in VS Code to run these requests
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+#
+
+### Root URL
+
+GET http://localhost:8080
+
+### System info
+
+GET http://localhost:8080/info
+
+### Request inspection GET
+
+GET http://localhost:8080/inspect
+
+### Request inspection POST
+
+POST http://localhost:8080/inspect
+Content-Type: application/json
+
+{
+  "name": "Dave",
+  "age": 42
+}
+
+### System health
+
+GET http://localhost:8080/health
+
+
+### Random numbers
+
+GET http://localhost:8080/number/5000
+
+### Random words
+
+GET http://localhost:8080/word/4
