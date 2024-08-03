@@ -82,7 +82,7 @@ test-integration-report: ## 📜 Run integration & API tests with XML report
 	kill -9 $(shell lsof -t -i:8080) > /dev/null 2>&1 || true
 	go run ./cmd/*.go &
 	sleep 2
-	npx httpyac api/test.http --all --quiet --junit > test-results.xml
+	npx httpyac api/test.http --all --junit > test-results.xml
 	kill -9 $(shell lsof -t -i:8080) > /dev/null 2>&1 || true
 
 check-vars:
