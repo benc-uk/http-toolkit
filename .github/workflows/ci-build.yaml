@@ -39,14 +39,15 @@ jobs:
       - name: Integration Tests
         run: make test-integration-report
 
-      - name: Test Report
+      - name: Test Reporting
         uses: phoenix-actions/test-reporting@v8
         id: test-report
         if: success() || failure()
         with:
-          name: Integration Tests
+          name: Integration Test Report
           path: test-results.xml
           reporter: java-junit
+          fail-on-error: false
 
       - name: Build
         run: make build
