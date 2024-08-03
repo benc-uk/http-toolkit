@@ -7,7 +7,7 @@
 
 GET http://localhost:8080
 
-?? status == 300
+?? status == 200
 
 ### System info
 
