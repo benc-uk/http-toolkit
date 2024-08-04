@@ -4,70 +4,70 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-var reqDebug bool
-var bodyDebug bool
+var cfg AppConfig
 
 func main() {
-	// Get PORT environment variable
-	portEnv := os.Getenv("PORT")
-	if portEnv == "" {
-		portEnv = "8080"
-	}
-
-	reqDebug = true
-
-	reqDebugEnv := strings.ToLower(os.Getenv("REQUEST_DEBUG"))
-	if reqDebugEnv == "false" {
-		reqDebug = false
-	}
-
-	bodyDebug = true
-
-	bodyDebugEnv := strings.ToLower(os.Getenv("BODY_DEBUG"))
-	if bodyDebugEnv == "false" {
-		bodyDebug = false
-	}
+	// Set up configuration
+	cfg = NewConfig()
+	cfg.loadEnv()
 
 	r := chi.NewRouter()
 
-	if reqDebug {
+	if cfg.reqDebug {
 		r.Use(reqDebugMiddleware)
 	}
 
 	r.Use(middleware.Logger)
 
-	r.Get("/", ok)
-	r.Get("/health*", ok)
+	// Add optional prefix to all routes (which defaults to "/")
+	r.Route(cfg.routePrefix, func(r chi.Router) {
+		r.Get("/", ok)
+		r.Get("/health*", ok)
 
-	r.Get("/info", systemInfo)
+		r.Get("/info", systemInfo)
 
-	r.Get("/status/{code}", statusCode)
-	r.Get("/word", randomWord)
-	r.Get("/word/{count}", randomWord)
-	r.Get("/number", randomNumber)
-	r.Get("/number/{max}", randomNumber)
-	r.Get("/uuid", randomUUID)
-	r.Get("/uuid/{input}", randomUUID)
+		r.Get("/status/{code}", statusCode)
+		r.Get("/word", randomWord)
+		r.Get("/word/{count}", randomWord)
+		r.Get("/number", randomNumber)
+		r.Get("/number/{max}", randomNumber)
+		r.Get("/uuid", randomUUID)
+		r.Get("/uuid/{input}", randomUUID)
 
-	// Add a catch-all route to inspect & echo requests
-	r.HandleFunc("/*", inspect)
+		r.Route("/auth/basic", func(r chi.Router) {
+			r.Use(middleware.BasicAuth("realm", map[string]string{
+				cfg.basicAuthUser: cfg.basicAuthPassword,
+			}))
+
+			r.HandleFunc("/", ok)
+		})
+
+		if cfg.inspectAll {
+			// Add a catch-all route to inspect & echo requests that don't match any other route
+			r.HandleFunc("/*", inspect)
+		} else {
+			// Only inspect & echo requests to /inspect and /echo
+			r.HandleFunc("/inspect", inspect)
+			r.HandleFunc("/echo", inspect)
+		}
+	})
 
 	server := &http.Server{
-		Addr:              ":" + portEnv,
+		Addr:              ":" + cfg.port,
 		ReadHeaderTimeout: 3 * time.Second,
+		WriteTimeout:      3 * time.Second,
+		IdleTimeout:       120 * time.Second,
 		Handler:           r,
 	}
 
 	log.Printf("HTTP Toolkit v0.0")
-	log.Printf("Server started on port %s", portEnv)
+	log.Printf("Server started on port %s", cfg.port)
 	log.Fatal(server.ListenAndServe())
 }
 

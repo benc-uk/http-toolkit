@@ -83,7 +83,7 @@ test-api: ## 🔬 Run integration tests
 	fuser -k 8080/tcp || true
 	REQUEST_DEBUG=false go run $(SRC_DIR) &
 	sleep 2
-	npx httpyac api/test.http --all --output none
+	npx httpyac api/tests.http --all --output short
 	fuser -k 8080/tcp || true
 
 test-api-report: ## 📜 Run integration tests to JUnit format report/api-tests.xml
@@ -91,7 +91,7 @@ test-api-report: ## 📜 Run integration tests to JUnit format report/api-tests.
 	go run $(SRC_DIR) &
 	sleep 2
 	mkdir -p report
-	npx httpyac api/test.http --all --junit > report/api-tests.xml
+	npx httpyac api/tests.http --all --junit > report/api-tests.xml
 	fuser -k 8080/tcp || true
 
 check-vars:

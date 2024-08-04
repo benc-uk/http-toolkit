@@ -25,17 +25,25 @@ GET http://{{ENDPOINT}}/inspect
 ?? body method == GET
 
 
+### Request inspection GET with query
+GET http://{{ENDPOINT}}/inspect?someName=Brian&someAge=76
+
+?? status == 200
+?? body query.someName == Brian
+?? body query.someAge == 76
+
+
 ### Request inspection POST
 POST http://{{ENDPOINT}}/inspect
 Content-Type: application/json
 
 {
-  "name": "Dave",
-  "age": 42
+  "name": "Brian Eno",
+  "age": 76
 }
 
 ?? status == 200
-?? body body includes Dave
+?? body body includes Brian
 ?? body method == POST
 
 
@@ -86,3 +94,23 @@ GET http://{{ENDPOINT}}/uuid
 
 ?? status == 200
 ?? body matches ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+
+
+### Basic auth fails without credentials
+GET http://{{ENDPOINT}}/auth/basic
+
+?? status == 401
+
+
+### Basic auth fails with wrong credentials
+GET http://{{ENDPOINT}}/auth/basic
+Authorization: Basic sneakyBob mySecretPwd123
+
+?? status == 401
+
+
+### Basic auth succeeds with correct credentials
+POST http://{{ENDPOINT}}/auth/basic
+Authorization: Basic admin secret
+
+?? status == 200

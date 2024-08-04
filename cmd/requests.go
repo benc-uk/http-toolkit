@@ -34,7 +34,7 @@ func newRequestDetails(r *http.Request) RequestDetails {
 
 	bodyStr := ""
 
-	if bodyDebug {
+	if cfg.bodyDebug {
 		// Read the body if bodyDebug is enabled
 		body, err := io.ReadAll(r.Body)
 		if err != nil {

@@ -62,7 +62,7 @@ func TestNewRequestDetails(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			bodyDebug = tt.bodyDebug
+			cfg.bodyDebug = tt.bodyDebug
 			req := httptest.NewRequest(tt.method, tt.url, strings.NewReader(tt.body))
 			for k, v := range tt.headers {
 				req.Header.Set(k, v)
