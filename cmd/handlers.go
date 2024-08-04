@@ -6,10 +6,13 @@ import (
 	"net/http"
 	"runtime"
 	"strconv"
+	"strings"
 
 	"math/rand"
 
 	"github.com/elastic/go-sysinfo"
+	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 )
 
 type SystemInfo struct {
@@ -34,13 +37,6 @@ func inspect(w http.ResponseWriter, r *http.Request) {
 }
 
 func ok(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" && r.URL.Path != "/health" {
-		w.WriteHeader(http.StatusNotFound)
-		_, _ = w.Write([]byte("Not Found"))
-
-		return
-	}
-
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("OK"))
 }
@@ -89,7 +85,7 @@ func statusCode(w http.ResponseWriter, r *http.Request) {
 }
 
 func randomWord(w http.ResponseWriter, r *http.Request) {
-	count := r.PathValue("count")
+	count := chi.URLParam(r, "count")
 	if count == "" {
 		count = "1"
 	}
@@ -103,17 +99,18 @@ func randomWord(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Generate a random words and append them to a string
-	wordsOut := ""
+	wordsOut := make([]string, 0)
 	for i := 0; i < countInt; i++ {
 		//nolint:gosec
-		wordsOut += words[rand.Intn(len(words))] + " "
+		wordsOut = append(wordsOut, words[rand.Intn(len(words))])
 	}
 
-	_, _ = w.Write([]byte(wordsOut))
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(strings.Join(wordsOut, " ")))
 }
 
 func randomNumber(w http.ResponseWriter, r *http.Request) {
-	max := r.PathValue("max")
+	max := chi.URLParam(r, "max")
 	if max == "" {
 		max = "1000"
 	}
@@ -131,4 +128,39 @@ func randomNumber(w http.ResponseWriter, r *http.Request) {
 
 	//nolint:sec
 	_, _ = w.Write([]byte(strconv.Itoa(rand.Intn(maxInt))))
+}
+
+func randomUUID(w http.ResponseWriter, r *http.Request) {
+	input := chi.URLParam(r, "input")
+
+	var u uuid.UUID
+
+	var err error
+
+	if input != "" {
+		// if input is less than 16 characters, pad it with '0's
+		sourceString := input
+		if len(input) < 16 {
+			sourceString = input + strings.Repeat("0", 16-len(input))
+		}
+
+		reader := strings.NewReader(sourceString)
+
+		u, err = uuid.NewRandomFromReader(reader)
+		if err != nil {
+			_, _ = w.Write([]byte("Error generating UUID"))
+
+			return
+		}
+	} else {
+		u, err = uuid.NewRandom()
+		if err != nil {
+			_, _ = w.Write([]byte("Error generating UUID"))
+
+			return
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(u.String()))
 }

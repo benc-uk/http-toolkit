@@ -40,7 +40,7 @@ Content-Type: application/json
 
 
 ### System health
-GET http://{{ENDPOINT}}/health
+GET http://{{ENDPOINT}}/healthy
 
 ?? status == 200
 ?? body includes OK
@@ -54,7 +54,7 @@ GET http://{{ENDPOINT}}/number/5000
 
 
 ### Random words
-GET http://{{ENDPOINT}}/word/4
+GET http://{{ENDPOINT}}/word/6
 
 ?? status == 200
 ?? body matches ^\D+
@@ -64,3 +64,25 @@ GET http://{{ENDPOINT}}/word/4
 GET http://{{ENDPOINT}}/status/418
 
 ?? status == 418
+
+
+### Wildcard path defaults to inspection
+PUT http://{{ENDPOINT}}/this/goes/somwhere
+
+?? status == 200
+?? body method == PUT
+
+
+### UUID generation deterministic
+GET http://{{ENDPOINT}}/uuid/i-like-jam-on-toast
+
+?? status == 200
+?? body matches ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+?? body startsWith 692d6c69
+
+
+### UUID generation random
+GET http://{{ENDPOINT}}/uuid
+
+?? status == 200
+?? body matches ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$

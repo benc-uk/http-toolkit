@@ -58,7 +58,7 @@ run: ## 🏃 Run application, used for local development
 
 clean: ## 🧹 Clean up, remove dev data and files
 	@figlet $@ || true
-	@rm -rf bin *.xml
+	@rm -rf bin report .tools
 
 release: ## 🚀 Release a new version on GitHub
 	@figlet $@ || true
