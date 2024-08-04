@@ -32,7 +32,7 @@ func main() {
 
 		r.Get("/info", systemInfo)
 
-		r.Get("/status/{code}", statusCode)
+		r.HandleFunc("/status/{code}", statusCode)
 		r.Get("/word", randomWord)
 		r.Get("/word/{count}", randomWord)
 		r.Get("/number", randomNumber)
