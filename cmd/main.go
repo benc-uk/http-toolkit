@@ -13,6 +13,7 @@ import (
 
 var cfg AppConfig
 var tokenAuth *jwtauth.JWTAuth
+var version = "0.0"
 
 func main() {
 	// Set up configuration
@@ -81,7 +82,7 @@ func main() {
 		Handler:           r,
 	}
 
-	log.Printf("🌐 HTTP Toolkit v0.0")
+	log.Printf("🌐 HTTP Toolkit " + version)
 	log.Printf("🚀 Server started on port %s", cfg.port)
 
 	// Generate a valid JWT token for testing with no claims

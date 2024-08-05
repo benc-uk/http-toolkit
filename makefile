@@ -1,10 +1,3 @@
-# Set ENV to dev, prod, etc. to load .env.$(ENV) file
-ENV ?= 
--include .env
-export
--include .env.$(ENV)
-export
-
 # Internal variables you don't want to change
 REPO_ROOT := $(shell git rev-parse --show-toplevel)
 SHELL := /bin/bash
@@ -15,8 +8,10 @@ AIR_PATH := $(REPO_ROOT)/.tools/air
 JUNIT_REPORT_PATH := $(REPO_ROOT)/.tools/go-junit-report
 
 .EXPORT_ALL_VARIABLES:
-.PHONY: help image push build run lint lint-fix
+.PHONY: help image push build run lint lint-fix install-tools clean release test test-report test-api test-api-report check-vars
 .DEFAULT_GOAL := help
+
+VERSION ?= $(shell git describe --tags --always)
 
 help: ## 💬 This help message :)
 	@figlet $@ || true
@@ -27,7 +22,6 @@ install-tools: ## 🔮 Install dev tools into project .tools directory
 	@$(GOLINT_PATH) > /dev/null 2>&1 || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./.tools/
 	@$(AIR_PATH) -v > /dev/null 2>&1 || ( wget https://github.com/cosmtrek/air/releases/download/v1.51.0/air_1.51.0_linux_amd64 -q -O .tools/air && chmod +x .tools/air )
 	@$(JUNIT_REPORT_PATH) -v > /dev/null 2>&1 || GOBIN=$(REPO_ROOT)/.tools go install github.com/jstemmer/go-junit-report/v2@latest
-	
 	
 lint: ## 🔍 Lint & format check only, sets exit code on error for CI
 	@figlet $@ || true
@@ -50,7 +44,7 @@ push: check-vars ## 📤 Push container image to registry
 
 build: ## 🔨 Run a local build without a container
 	@figlet $@ || true
-	go build -o bin/http-tool $(SRC_DIR)/...
+	go build -ldflags "-X main.version=$(VERSION)" -o bin/http-tool $(SRC_DIR)/...
 
 run: ## 🏃 Run application, used for local development
 	@figlet $@ || true
@@ -60,13 +54,13 @@ clean: ## 🧹 Clean up, remove dev data and files
 	@figlet $@ || true
 	@rm -rf bin report .tools
 
-release: ## 🚀 Release a new version on GitHub
+release: build ## 🚀 Release a new version on GitHub
 	@figlet $@ || true
-	@echo "Releasing version $(VERSION) on GitHub"
-	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-	gh release create "$(VERSION)" --title "v$(VERSION)" \
-	--notes-file docs/release-notes.md \
-	--latest 
+	git push origin $(VERSION)
+	@echo "Releasing version $(VERSION) on GitHub, ctrl+c to cancel"
+	@sleep 5
+	gh release create "$(VERSION)" --title "$(VERSION)" --latest --notes "Release $(VERSION)"
+	gh release upload $(VERSION) bin/http-tool
 
 test: ## 🧪 Run unit tests
 	@figlet $@ || true
