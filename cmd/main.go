@@ -81,12 +81,14 @@ func main() {
 		Handler:           r,
 	}
 
-	log.Printf("HTTP Toolkit v0.0")
-	log.Printf("Server started on port %s", cfg.port)
+	log.Printf("🌐 HTTP Toolkit v0.0")
+	log.Printf("🚀 Server started on port %s", cfg.port)
 
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"user_id": 123})
-	log.Printf("Basic auth credentials: %s:%s\n", cfg.basicAuthUser, cfg.basicAuthPassword)
-	log.Printf("JWT valid token: %s\n\n", tokenString)
+	// Generate a valid JWT token for testing with no claims
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{})
+
+	log.Printf("🔐 Basic auth credentials: %s:%s\n", cfg.basicAuthUser, cfg.basicAuthPassword)
+	log.Printf("🔑 JWT valid token: %s\n\n", tokenString)
 
 	log.Fatal(server.ListenAndServe())
 }

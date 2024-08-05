@@ -110,7 +110,7 @@ Authorization: Basic sneakyBob mySecretPwd123
 
 
 ### Basic auth succeeds with correct credentials
-POST http://{{ENDPOINT}}/auth/basic
+GET http://{{ENDPOINT}}/auth/basic
 Authorization: Basic {{BASIC_AUTH_USER}} {{BASIC_AUTH_PASSWORD}}
 
 ?? status == 200
