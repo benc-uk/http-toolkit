@@ -1,4 +1,4 @@
-module http-toolbox
+module github.com/benc-uk/http-toolkit
 
 go 1.22.1
 

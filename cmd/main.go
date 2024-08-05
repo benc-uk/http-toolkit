@@ -85,10 +85,10 @@ func main() {
 	log.Printf("🚀 Server started on port %s", cfg.port)
 
 	// Generate a valid JWT token for testing with no claims
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{})
+	_, exampleToken, _ := tokenAuth.Encode(map[string]interface{}{})
 
 	log.Printf("🔐 Basic auth credentials: %s:%s\n", cfg.basicAuthUser, cfg.basicAuthPassword)
-	log.Printf("🔑 JWT valid token: %s\n\n", tokenString)
+	log.Printf("🔑 JWT valid token: %s\n\n", exampleToken)
 
 	log.Fatal(server.ListenAndServe())
 }
