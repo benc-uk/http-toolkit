@@ -13,6 +13,7 @@ type AppConfig struct {
 	port              string
 	basicAuthUser     string
 	basicAuthPassword string
+	jwtSignKey        string
 }
 
 func NewConfig() AppConfig {
@@ -24,6 +25,7 @@ func NewConfig() AppConfig {
 		port:              "8080",
 		basicAuthUser:     "admin",
 		basicAuthPassword: "secret",
+		jwtSignKey:        "key_1234567890",
 	}
 }
 
@@ -63,5 +65,10 @@ func (cfg *AppConfig) loadEnv() {
 	basicAuthPassword := os.Getenv("BASIC_AUTH_PASSWORD")
 	if basicAuthPassword != "" {
 		cfg.basicAuthPassword = basicAuthPassword
+	}
+
+	jwtSignKey := os.Getenv("JWT_SIGN_KEY")
+	if jwtSignKey != "" {
+		cfg.jwtSignKey = jwtSignKey
 	}
 }

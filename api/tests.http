@@ -111,6 +111,25 @@ Authorization: Basic sneakyBob mySecretPwd123
 
 ### Basic auth succeeds with correct credentials
 POST http://{{ENDPOINT}}/auth/basic
-Authorization: Basic admin secret
+Authorization: Basic {{BASIC_AUTH_USER}} {{BASIC_AUTH_PASSWORD}}
 
+?? status == 200
+
+
+### JWT auth fails without token
+POST http://{{ENDPOINT}}/auth/jwt
+
+?? status == 401
+
+
+### JWT auth fails with wrong token
+POST http://{{ENDPOINT}}/auth/jwt
+Authorization: Bearer 11111222222233333444444
+
+?? status == 401
+
+
+### JWT auth succeeds with correct token
+POST http://{{ENDPOINT}}/auth/jwt
+Authorization: Bearer {{JWT_TOKEN}}
 ?? status == 200

@@ -8,9 +8,11 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/jwtauth/v5"
 )
 
 var cfg AppConfig
+var tokenAuth *jwtauth.JWTAuth
 
 func main() {
 	// Set up configuration
@@ -25,7 +27,8 @@ func main() {
 
 	r.Use(middleware.Logger)
 
-	// Add optional prefix to all routes (which defaults to "/")
+	// Add all our routes under a sub-router
+	// This allows us to set a custom prefix for all routes
 	r.Route(cfg.routePrefix, func(r chi.Router) {
 		r.Get("/", ok)
 		r.Get("/health*", ok)
@@ -40,6 +43,7 @@ func main() {
 		r.Get("/uuid", randomUUID)
 		r.Get("/uuid/{input}", randomUUID)
 
+		// Route protected by basic auth
 		r.Route("/auth/basic", func(r chi.Router) {
 			r.Use(middleware.BasicAuth("realm", map[string]string{
 				cfg.basicAuthUser: cfg.basicAuthPassword,
@@ -48,8 +52,19 @@ func main() {
 			r.HandleFunc("/", ok)
 		})
 
+		// Route protected by simple SHA256 JWT auth
+		r.Route("/auth/jwt", func(r chi.Router) {
+			tokenAuth = jwtauth.New("HS256", []byte(cfg.jwtSignKey), nil)
+
+			r.Use(jwtauth.Verifier(tokenAuth))
+			r.Use(jwtauth.Authenticator(tokenAuth))
+
+			r.HandleFunc("/", ok)
+		})
+
+		// Handle fallback
 		if cfg.inspectAll {
-			// Add a catch-all route to inspect & echo requests that don't match any other route
+			// Add a catch-all route to inspect & echo requests that don't match any other routes
 			r.HandleFunc("/*", inspect)
 		} else {
 			// Only inspect & echo requests to /inspect and /echo
@@ -68,6 +83,11 @@ func main() {
 
 	log.Printf("HTTP Toolkit v0.0")
 	log.Printf("Server started on port %s", cfg.port)
+
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"user_id": 123})
+	log.Printf("Basic auth credentials: %s:%s\n", cfg.basicAuthUser, cfg.basicAuthPassword)
+	log.Printf("JWT valid token: %s\n\n", tokenString)
+
 	log.Fatal(server.ListenAndServe())
 }
 
