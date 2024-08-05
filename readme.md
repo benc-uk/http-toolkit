@@ -7,11 +7,23 @@ This is a simple backend service for testing and debugging HTTP requests. It can
 ![](https://img.shields.io/github/release/benc-uk/http-toolkit)
 ![](https://img.shields.io/github/actions/workflow/status/benc-uk/http-toolkit/ci-build.yaml?label=ci-build)
 
-## 📦 Quick Deploy
+## 💾 Install Binaries
 
-TBA - Deploy from public container
+Download from GitHub:
 
-TBA - Deploy as standalone Go binary
+```bash
+blah
+```
+
+Alternatively if you have Go installed, the following installs the http-toolkit binary into the current directory:
+
+```bash
+GOBIN=$(pwd) go install github.com/benc-uk/http-toolkit/cmd@main && mv ./cmd ./http-toolkit
+```
+
+### 📦 Run From Container
+
+TBA - Run container
 
 ## 🏹 Usage
 
