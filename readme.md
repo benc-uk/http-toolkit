@@ -9,10 +9,11 @@ This is a simple backend service for testing and debugging HTTP requests. It can
 
 ## 💾 Install Binaries
 
-Download from GitHub:
+Download released binaries (Linux x86-64) from GitHub:
 
 ```bash
-blah
+curl -sSL https://github.com/benc-uk/http-toolkit/releases/download/v1.0/http-tool -o ./http-tool
+chmod +x ./http-tool
 ```
 
 Alternatively if you have Go installed, the following installs the http-toolkit binary into the current directory:
@@ -23,7 +24,13 @@ GOBIN=$(pwd) go install github.com/benc-uk/http-toolkit/cmd@main && mv ./cmd ./h
 
 ### 📦 Run From Container
 
-TBA - Run container
+Images are published on GitHub [here](https://github.com/benc-uk/http-toolkit/pkgs/container/http-tool)
+
+To run as a container simply run:
+
+```bash
+docker run --rm -it -p 8080:8080 ghcr.io/benc-uk/http-tool:v1.0
+```
 
 ## 🏹 Usage
 

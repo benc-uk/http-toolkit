@@ -8,10 +8,14 @@ AIR_PATH := $(REPO_ROOT)/.tools/air
 JUNIT_REPORT_PATH := $(REPO_ROOT)/.tools/go-junit-report
 
 .EXPORT_ALL_VARIABLES:
-.PHONY: help image push build run lint lint-fix install-tools clean release test test-report test-api test-api-report check-vars
+.PHONY: help image push build run lint lint-fix install-tools clean release test test-report test-api test-api-report check-vars version
 .DEFAULT_GOAL := help
 
 VERSION ?= $(shell git describe --tags --always)
+IMAGE_REG ?= ghcr.io
+IMAGE_NAME ?= benc-uk/http-tool
+IMAGE_TAG := $(VERSION)
+IMAGE_PREFIX := $(IMAGE_REG)/$(IMAGE_NAME)
 
 help: ## 💬 This help message :)
 	@figlet $@ || true
@@ -33,10 +37,9 @@ lint-fix: ## 📝 Lint & format, attempts to fix errors & modify code
 
 image: check-vars ## 📦 Build container image from Dockerfile
 	@figlet $@ || true
-	docker build --file ./build/Dockerfile \
-	--build-arg BUILD_INFO="$(BUILD_INFO)" \
+	docker build --file ./Dockerfile \
 	--build-arg VERSION="$(VERSION)" \
-	--tag $(IMAGE_PREFIX):$(IMAGE_TAG) . 
+	--tag $(IMAGE_PREFIX):$(IMAGE_TAG) .
 
 push: check-vars ## 📤 Push container image to registry
 	@figlet $@ || true
@@ -46,7 +49,7 @@ build: ## 🔨 Run a local build without a container
 	@figlet $@ || true
 	go build -ldflags "-X main.version=$(VERSION)" -o bin/http-tool $(SRC_DIR)/...
 
-run: ## 🏃 Run application, used for local development
+run: ## 🏃 Run locally with reload, used for local development
 	@figlet $@ || true
 	$(AIR_PATH) -c .air.toml
 
@@ -66,7 +69,7 @@ test: ## 🧪 Run unit tests
 	@figlet $@ || true
 	go test -v ./...
 
-test-report: ## 🧪 Run unit tests to JUnit format report/unit-tests.xml
+test-report: ## 📜 Run unit tests to JUnit format report/unit-tests.xml
 	@figlet $@ || true
 	go install github.com/jstemmer/go-junit-report/v2@latest
 	mkdir -p report
@@ -87,6 +90,9 @@ test-api-report: ## 📜 Run integration tests to JUnit format report/api-tests.
 	mkdir -p report
 	npx httpyac api/tests.http --all --junit > report/api-tests.xml
 	fuser -k 8080/tcp || true
+
+version: ## 📝 Show current version
+	@echo $(VERSION)
 
 check-vars:
 	@if [[ -z "${IMAGE_REG}" ]]; then echo "💥 Error! Required variable IMAGE_REG is not set!"; exit 1; fi
