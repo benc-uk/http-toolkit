@@ -11,7 +11,7 @@ JUNIT_REPORT_PATH := $(REPO_ROOT)/.tools/go-junit-report
 .PHONY: help image push build run lint lint-fix install-tools clean release test test-report test-api test-api-report check-vars
 .DEFAULT_GOAL := help
 
-VERSION ?= $(shell git describe --tags --always)
+VERSION ?= $(shell git describe --tags --always --dirty)
 
 help: ## 💬 This help message :)
 	@figlet $@ || true
