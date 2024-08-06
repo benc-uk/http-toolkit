@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -16,9 +17,11 @@ var tokenAuth *jwtauth.JWTAuth
 var version = "0.0"
 
 func main() {
+	log.Printf("🌐 HTTP Toolkit " + version)
+
 	// Set up configuration
 	cfg = NewConfig()
-	cfg.LoadFlags()
+	cfg.loadFlags()
 	cfg.loadEnv()
 
 	r := chi.NewRouter()
@@ -86,15 +89,26 @@ func main() {
 		Handler:           r,
 	}
 
-	log.Printf("🌐 HTTP Toolkit " + version)
-	log.Printf("🚀 Server started on port %s", cfg.port)
-
 	// Generate a valid JWT token for testing with no claims
 	_, exampleToken, _ := tokenAuth.Encode(map[string]interface{}{})
 
 	log.Printf("🔐 Basic auth credentials: %s:%s\n", cfg.basicAuthUser, cfg.basicAuthPassword)
 	log.Printf("🔑 JWT valid token: %s\n\n", exampleToken)
 
+	// Start the server using TLS if configured
+	if cfg.useTLS {
+		log.Printf("🚀 Server started with TLS on port %s", cfg.port)
+
+		server.TLSConfig = &tls.Config{
+			MinVersion: tls.VersionTLS12,
+		}
+
+		// ListenAndServeTLS blocks so nothing after this will run
+		log.Fatal(server.ListenAndServeTLS(cfg.certPath+"/cert.pem", cfg.certPath+"/key.pem"))
+	}
+
+	// Otherwise start the server without TLS
+	log.Printf("🚀 Server started on port %s", cfg.port)
 	log.Fatal(server.ListenAndServe())
 }
 

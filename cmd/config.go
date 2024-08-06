@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"os"
 	"strings"
 )
@@ -15,6 +16,8 @@ type AppConfig struct {
 	basicAuthUser     string
 	basicAuthPassword string
 	jwtSignKey        string
+	certPath          string
+	useTLS            bool
 }
 
 func NewConfig() AppConfig {
@@ -27,10 +30,12 @@ func NewConfig() AppConfig {
 		basicAuthUser:     "admin",
 		basicAuthPassword: "secret",
 		jwtSignKey:        "key_1234567890",
+		certPath:          "",
+		useTLS:            false,
 	}
 }
 
-func (cfg *AppConfig) LoadFlags() {
+func (cfg *AppConfig) loadFlags() {
 	printVer := flag.Bool("version", false, "Print version and exit")
 
 	flag.StringVar(&cfg.port, "port", cfg.port, "Port to listen on")
@@ -41,6 +46,7 @@ func (cfg *AppConfig) LoadFlags() {
 	flag.StringVar(&cfg.basicAuthUser, "basic-auth-user", cfg.basicAuthUser, "Basic auth username")
 	flag.StringVar(&cfg.basicAuthPassword, "basic-auth-password", cfg.basicAuthPassword, "Basic auth password")
 	flag.StringVar(&cfg.jwtSignKey, "jwt-sign-key", cfg.jwtSignKey, "Signing key for JWT")
+	flag.StringVar(&cfg.certPath, "cert-path", cfg.certPath, "Path to TLS cert & key files")
 
 	flag.Parse()
 
@@ -91,5 +97,31 @@ func (cfg *AppConfig) loadEnv() {
 	jwtSignKey := os.Getenv("JWT_SIGN_KEY")
 	if jwtSignKey != "" {
 		cfg.jwtSignKey = jwtSignKey
+	}
+
+	certPath := os.Getenv("CERT_PATH")
+	if certPath != "" {
+		cfg.certPath = certPath
+	}
+
+	cfg.useTLS = false
+
+	// Check for TLS cert & key files if certPath is set
+	if cfg.certPath != "" {
+		log.Printf("🧬 Enabling TLS, checking cert & key files in: %s", cfg.certPath)
+		cfg.useTLS = true
+
+		// Check cert & key files exist
+		if _, err := os.Stat(cfg.certPath + "/cert.pem"); os.IsNotExist(err) {
+			log.Printf("😟 cert.pem not found, TLS will be disabled")
+
+			cfg.useTLS = false
+		}
+
+		if _, err := os.Stat(cfg.certPath + "/key.pem"); os.IsNotExist(err) {
+			log.Printf("😟 key.pem not found, TLS will be disabled")
+
+			cfg.useTLS = false
+		}
 	}
 }

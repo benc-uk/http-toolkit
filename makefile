@@ -13,7 +13,7 @@ JUNIT_REPORT_PATH := $(REPO_ROOT)/.tools/go-junit-report
 VERSION ?= $(shell git describe --tags --always)
 IMAGE_REG ?= ghcr.io
 IMAGE_NAME ?= benc-uk/http-tool
-IMAGE_TAG := $(VERSION)
+IMAGE_TAG ?= $(VERSION)
 IMAGE_PREFIX := $(IMAGE_REG)/$(IMAGE_NAME)
 
 help: ## 💬 This help message :)

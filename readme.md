@@ -74,14 +74,19 @@ Configuration can be done via environmental variables
 | BASIC_AUTH_USER     | Username accepted for basic auth                 | "admin"          |
 | BASIC_AUTH_PASSWORD | Password for basic auth user                     | "secret"         |
 | JWT_SIGN_KEY        | Signing key used for JWT auth                    | "key_1234567890" |
+| CERT_PATH           | Enable TLS, see below                            | _none_           |
 
 A note on the `INSPECT_FALLBACK` setting, by default this is enabled, this means that going any route not matched by the app e.g. `/foo/cheese` will result in the same response as going to `/inspect` and that is echoing back details of your request as JSON. This would include incorrect methods to routes e.g. a POST to `/info`
 
 Any of these settings can also be passed as arguments when starting, run `http-toolkit -help` for details
 
+### Enabling TLS / HTTPS
+
+Set `CERT_PATH` to point to a directory, this directory should contain both a cert.pem file and a key.pem file. If found the server starts in TLS mode and will accept HTTPS requests.
+
 ## 🧑‍💻 Local Development
 
-Use the Makefile, it's super handy
+Use the Makefile, it's super handy and very nice
 
 ```
 help                 💬 This help message :)

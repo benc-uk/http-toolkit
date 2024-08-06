@@ -8,7 +8,7 @@ linters:
     - revive # Replacement for golint
     - gofmt # Runs gofmt as part of the linter
     - gosec # Find security issues
-    - wsl # Whitespace linter
+    - wsl # Whitespace linter, very much an acquired taste
     - stylecheck # A few Go style rules
     - misspell # Find misspelled words
     - cyclop # Find cyclomatic complexity
@@ -17,11 +17,10 @@ linters:
     - nilerr # Find bad nil/err handling
     - nilnil # Also find bad nil/err handling
     - tagliatelle # Find badly named struct tags
-    #- gomnd       # Find magic numbers, enable at your peril
 
 issues:
   exclude-files:
-    # Test files are skipped
+    # Test files are skipped, as they are Copilot generated
     - ".*_test\\.go$"
 
 linters-settings:
