@@ -18,6 +18,7 @@ var version = "0.0"
 func main() {
 	// Set up configuration
 	cfg = NewConfig()
+	cfg.LoadFlags()
 	cfg.loadEnv()
 
 	r := chi.NewRouter()
@@ -43,6 +44,9 @@ func main() {
 		r.Get("/number/{max}", randomNumber)
 		r.Get("/uuid", randomUUID)
 		r.Get("/uuid/{input}", randomUUID)
+
+		r.HandleFunc("/delay/{seconds}", delay)
+		r.HandleFunc("/delay", delay)
 
 		// Route protected by basic auth
 		r.Route("/auth/basic", func(r chi.Router) {
@@ -76,8 +80,8 @@ func main() {
 
 	server := &http.Server{
 		Addr:              ":" + cfg.port,
-		ReadHeaderTimeout: 3 * time.Second,
-		WriteTimeout:      3 * time.Second,
+		ReadHeaderTimeout: 30 * time.Second,
+		WriteTimeout:      30 * time.Second,
 		IdleTimeout:       120 * time.Second,
 		Handler:           r,
 	}

@@ -1,6 +1,4 @@
-//
-// Created by Copilot
-//
+// Created by Copilot, don't blame me if the code is shonky!
 
 package main
 

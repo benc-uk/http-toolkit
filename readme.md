@@ -37,31 +37,32 @@ docker run --rm -it -p 8080:8080 ghcr.io/benc-uk/http-tool:v1.0
 The routes and features supported are
 
 ```text
-GET /               - Root URL returns 200/OK
-GET /health         - Also returns 200/OK
-GET /healthz        - Same
+GET /                - Root URL returns 200/OK
+GET /health          - Also returns 200/OK
+GET /healthz         - Same
 
-GET /info           - System info as JSON
+GET /info            - System info as JSON
 
-ANY /inspect        - Returns JSON description of the request
-ANY /echo           - Same
+ANY /inspect         - Returns JSON description of the request
+ANY /echo            - Same
 
-ANY /status/{code}  - Return a given status code
+ANY /status/{code}   - Return a given status code
 
-GET /word           - Return a random word
-GET /word/{count}   - Return several random words
-GET /number         - Return a random number between 0-999
-GET /number/{max}   - Return a random number between 0 and max
-GET /uuid           - Generate a random UUID
-GET /uuid/{input}   - Generate a deterministic UUID from input string
+GET /word            - Return a random word
+GET /word/{count}    - Return several random words
+GET /number          - Return a random number between 0-999
+GET /number/{max}    - Return a random number between 0 and max
+GET /uuid            - Generate a random UUID
+GET /uuid/{input}    - Generate a deterministic UUID from input string
+GET /uuid/{seconds}  - Delay a response
 
-ANY /auth/basic     - Protected by basic auth, see config for credentials
-ANY /auth/jwt       - Protected by JWT (HMAC-SHA256), see config for signing key
+ANY /auth/basic      - Protected by basic auth, see config for credentials
+ANY /auth/jwt        - Protected by JWT (HMAC-SHA256), see config for signing key
 ```
 
 ## 🛠️ Config
 
-All configuration is done via environmental variables
+Configuration can be done via environmental variables
 
 | Variable            | Description                                      | Default          |
 | ------------------- | ------------------------------------------------ | ---------------- |
@@ -76,6 +77,8 @@ All configuration is done via environmental variables
 
 A note on the `INSPECT_FALLBACK` setting, by default this is enabled, this means that going any route not matched by the app e.g. `/foo/cheese` will result in the same response as going to `/inspect` and that is echoing back details of your request as JSON. This would include incorrect methods to routes e.g. a POST to `/info`
 
+Any of these settings can also be passed as arguments when starting, run `http-toolkit -help` for details
+
 ## 🧑‍💻 Local Development
 
 Use the Makefile, it's super handy
@@ -88,11 +91,12 @@ lint-fix             📝 Lint & format, attempts to fix errors & modify code
 image                📦 Build container image from Dockerfile
 push                 📤 Push container image to registry
 build                🔨 Run a local build without a container
-run                  🏃 Run application, used for local development
+run                  🏃 Run locally with reload, used for local development
 clean                🧹 Clean up, remove dev data and files
 release              🚀 Release a new version on GitHub
 test                 🧪 Run unit tests
-test-report          🧪 Run unit tests to JUnit format report/unit-tests.xml
+test-report          📜 Run unit tests with report
 test-api             🔬 Run integration tests
-test-api-report      📜 Run integration tests to JUnit format report/api-tests.xml
+test-api-report      📜 Run integration tests with report
+version              📝 Show current version
 ```

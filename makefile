@@ -8,7 +8,6 @@ AIR_PATH := $(REPO_ROOT)/.tools/air
 JUNIT_REPORT_PATH := $(REPO_ROOT)/.tools/go-junit-report
 
 .EXPORT_ALL_VARIABLES:
-.PHONY: help image push build run lint lint-fix install-tools clean release test test-report test-api test-api-report check-vars version
 .DEFAULT_GOAL := help
 
 VERSION ?= $(shell git describe --tags --always)
@@ -69,7 +68,7 @@ test: ## 🧪 Run unit tests
 	@figlet $@ || true
 	go test -v ./...
 
-test-report: ## 📜 Run unit tests to JUnit format report/unit-tests.xml
+test-report: ## 📜 Run unit tests with report
 	@figlet $@ || true
 	go install github.com/jstemmer/go-junit-report/v2@latest
 	mkdir -p report
@@ -83,7 +82,7 @@ test-api: ## 🔬 Run integration tests
 	npx httpyac api/tests.http --all --output short
 	fuser -k 8080/tcp || true
 
-test-api-report: ## 📜 Run integration tests to JUnit format report/api-tests.xml
+test-api-report: ## 📜 Run integration tests with report
 	fuser -k 8080/tcp || true
 	go run $(SRC_DIR) &
 	sleep 2

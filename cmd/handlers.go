@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"math/rand"
 
@@ -163,4 +164,24 @@ func randomUUID(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(u.String()))
+}
+
+func delay(w http.ResponseWriter, r *http.Request) {
+	delay := chi.URLParam(r, "seconds")
+	if delay == "" {
+		delay = "1"
+	}
+
+	delayInt, err := strconv.Atoi(delay)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("Invalid delay value"))
+
+		return
+	}
+
+	time.Sleep(time.Duration(delayInt) * time.Second)
+
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte("OK"))
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"strings"
 )
@@ -26,6 +27,26 @@ func NewConfig() AppConfig {
 		basicAuthUser:     "admin",
 		basicAuthPassword: "secret",
 		jwtSignKey:        "key_1234567890",
+	}
+}
+
+func (cfg *AppConfig) LoadFlags() {
+	printVer := flag.Bool("version", false, "Print version and exit")
+
+	flag.StringVar(&cfg.port, "port", cfg.port, "Port to listen on")
+	flag.BoolVar(&cfg.reqDebug, "request-debug", cfg.reqDebug, "Enable request debugging/inspection in logs")
+	flag.BoolVar(&cfg.bodyDebug, "body-debug", cfg.bodyDebug, "Include request body when debugging")
+	flag.BoolVar(&cfg.inspectAll, "inspect-fallback", cfg.inspectAll, "Fallback to inspect & echo when no routes match")
+	flag.StringVar(&cfg.routePrefix, "route-prefix", cfg.routePrefix, "Route prefix")
+	flag.StringVar(&cfg.basicAuthUser, "basic-auth-user", cfg.basicAuthUser, "Basic auth username")
+	flag.StringVar(&cfg.basicAuthPassword, "basic-auth-password", cfg.basicAuthPassword, "Basic auth password")
+	flag.StringVar(&cfg.jwtSignKey, "jwt-sign-key", cfg.jwtSignKey, "Signing key for JWT")
+
+	flag.Parse()
+
+	if *printVer {
+		println(version)
+		os.Exit(0)
 	}
 }
 
