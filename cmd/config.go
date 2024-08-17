@@ -51,8 +51,10 @@ func (cfg *AppConfig) loadFlags() {
 	flag.StringVar(&cfg.basicAuthPassword, "basic-auth-password", cfg.basicAuthPassword, "Basic auth password")
 	flag.StringVar(&cfg.jwtSignKey, "jwt-sign-key", cfg.jwtSignKey, "Signing key for JWT")
 	flag.StringVar(&cfg.certPath, "cert-path", cfg.certPath, "Path to TLS cert & key files")
-	flag.StringVar(&cfg.spaPath, "spa-path", cfg.spaPath, "Path to SPA files to serve, default is none and don't serve SPA")
-	flag.StringVar(&cfg.staticPath, "static-path", cfg.staticPath, "Path to static files to serve, default is none and don't serve files")
+	flag.StringVar(&cfg.spaPath, "spa-path", cfg.spaPath,
+		"Path to SPA files to serve, default is none and don't serve SPA")
+	flag.StringVar(&cfg.staticPath, "static-path", cfg.staticPath,
+		"Path to static files to serve, default is none and don't serve files")
 
 	flag.Parse()
 
@@ -88,12 +90,14 @@ func (cfg *AppConfig) loadEnv() {
 	routePrefix := os.Getenv("ROUTE_PREFIX")
 	if routePrefix != "" {
 		cfg.routePrefix = routePrefix
-	}
-	if !strings.HasSuffix(cfg.routePrefix, "/") {
-		cfg.routePrefix += "/"
-	}
-	if !strings.HasPrefix(cfg.routePrefix, "/") {
-		cfg.routePrefix = "/" + cfg.routePrefix
+
+		if !strings.HasSuffix(cfg.routePrefix, "/") {
+			cfg.routePrefix += "/"
+		}
+
+		if !strings.HasPrefix(cfg.routePrefix, "/") {
+			cfg.routePrefix = "/" + cfg.routePrefix
+		}
 	}
 
 	basicAuthUser := os.Getenv("BASIC_AUTH_USER")
