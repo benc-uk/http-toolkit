@@ -17,7 +17,7 @@ var tokenAuth *jwtauth.JWTAuth
 var version = "0.0"
 
 func main() {
-	log.Printf("🌐 HTTP Toolkit " + version)
+	log.Printf("🌐 HTTP Toolkit %s", version)
 
 	// Set up configuration
 	cfg = NewConfig()
