@@ -3,6 +3,13 @@
 # https://marketplace.visualstudio.com/items?itemName=anoff.httpyac
 #
 
+# Uncomment variables below, only if using the VSCode REST Client
+#@ENDPOINT={{$dotenv %ENDPOINT}}
+#@JWT_TOKEN={{$dotenv %JWT_TOKEN}}
+#@BASIC_AUTH_USER={{$dotenv %BASIC_AUTH_USER}}
+#@BASIC_AUTH_PASSWORD={{$dotenv %BASIC_AUTH_PASSWORD}}
+
+
 ### Root URL
 GET http://{{ENDPOINT}}
 
@@ -25,7 +32,7 @@ GET http://{{ENDPOINT}}/inspect
 ?? body method == GET
 
 
-### Request inspection GET with query
+### Request inspection with query
 GET http://{{ENDPOINT}}/inspect?someName=Brian&someAge=76
 
 ?? status == 200
@@ -132,4 +139,5 @@ Authorization: Bearer 11111222222233333444444
 ### JWT auth succeeds with correct token
 POST http://{{ENDPOINT}}/auth/jwt
 Authorization: Bearer {{JWT_TOKEN}}
+
 ?? status == 200

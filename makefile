@@ -6,6 +6,7 @@ SRC_DIR := ./cmd
 GOLINT_PATH := $(REPO_ROOT)/.tools/golangci-lint
 AIR_PATH := $(REPO_ROOT)/.tools/air
 JUNIT_REPORT_PATH := $(REPO_ROOT)/.tools/go-junit-report
+HTTPYAC_PATH := $(REPO_ROOT)/.tools/node_modules/.bin/httpyac
 
 .EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := help
@@ -25,6 +26,7 @@ install-tools: ## 🔮 Install dev tools into project .tools directory
 	@$(GOLINT_PATH) > /dev/null 2>&1 || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./.tools/
 	@$(AIR_PATH) -v > /dev/null 2>&1 || ( wget https://github.com/cosmtrek/air/releases/download/v1.51.0/air_1.51.0_linux_amd64 -q -O .tools/air && chmod +x .tools/air )
 	@$(JUNIT_REPORT_PATH) -v > /dev/null 2>&1 || GOBIN=$(REPO_ROOT)/.tools go install github.com/jstemmer/go-junit-report/v2@latest
+	@$(HTTPYAC_PATH) -v > /dev/null 2>&1 || npm install httpyac@latest --prefix .tools
 	
 lint: ## 🔍 Lint & format check only, sets exit code on error for CI
 	@figlet $@ || true
@@ -79,7 +81,7 @@ test-api: ## 🔬 Run integration tests
 	fuser -k 8080/tcp || true
 	REQUEST_DEBUG=false go run $(SRC_DIR) &
 	sleep 2
-	npx httpyac api/tests.http --all --output short
+	$(HTTPYAC_PATH) api/tests.http --all --output short
 	fuser -k 8080/tcp || true
 
 test-api-report: ## 📜 Run integration tests with report
@@ -87,7 +89,7 @@ test-api-report: ## 📜 Run integration tests with report
 	go run $(SRC_DIR) &
 	sleep 2
 	mkdir -p report
-	npx httpyac api/tests.http --all --junit > report/api-tests.xml
+	$(HTTPYAC_PATH) api/tests.http --all --junit > report/api-tests.xml
 	fuser -k 8080/tcp || true
 
 version: ## 📝 Show current version

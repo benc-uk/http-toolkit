@@ -18,6 +18,8 @@ type AppConfig struct {
 	jwtSignKey        string
 	certPath          string
 	useTLS            bool
+	spaPath           string
+	staticPath        string
 }
 
 func NewConfig() AppConfig {
@@ -32,6 +34,8 @@ func NewConfig() AppConfig {
 		jwtSignKey:        "key_1234567890",
 		certPath:          "",
 		useTLS:            false,
+		spaPath:           "",
+		staticPath:        "",
 	}
 }
 
@@ -47,6 +51,8 @@ func (cfg *AppConfig) loadFlags() {
 	flag.StringVar(&cfg.basicAuthPassword, "basic-auth-password", cfg.basicAuthPassword, "Basic auth password")
 	flag.StringVar(&cfg.jwtSignKey, "jwt-sign-key", cfg.jwtSignKey, "Signing key for JWT")
 	flag.StringVar(&cfg.certPath, "cert-path", cfg.certPath, "Path to TLS cert & key files")
+	flag.StringVar(&cfg.spaPath, "spa-path", cfg.spaPath, "Path to SPA files to serve, default is none and don't serve SPA")
+	flag.StringVar(&cfg.staticPath, "static-path", cfg.staticPath, "Path to static files to serve, default is none and don't serve files")
 
 	flag.Parse()
 
@@ -83,6 +89,12 @@ func (cfg *AppConfig) loadEnv() {
 	if routePrefix != "" {
 		cfg.routePrefix = routePrefix
 	}
+	if !strings.HasSuffix(cfg.routePrefix, "/") {
+		cfg.routePrefix += "/"
+	}
+	if !strings.HasPrefix(cfg.routePrefix, "/") {
+		cfg.routePrefix = "/" + cfg.routePrefix
+	}
 
 	basicAuthUser := os.Getenv("BASIC_AUTH_USER")
 	if basicAuthUser != "" {
@@ -102,6 +114,16 @@ func (cfg *AppConfig) loadEnv() {
 	certPath := os.Getenv("CERT_PATH")
 	if certPath != "" {
 		cfg.certPath = certPath
+	}
+
+	spaPath := os.Getenv("SPA_PATH")
+	if spaPath != "" {
+		cfg.spaPath = spaPath
+	}
+
+	staticPath := os.Getenv("STATIC_PATH")
+	if staticPath != "" {
+		cfg.staticPath = staticPath
 	}
 
 	cfg.useTLS = false

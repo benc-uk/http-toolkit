@@ -5,6 +5,7 @@ tmp_dir = "tmp"
 include_ext = ["go"]
 include_dir = ["cmd"]
 cmd = "go build -ldflags \"-X main.version=$VERSION\" -o ./tmp/main ./cmd/..."
+bin = "tmp/main"
 
 [misc]
 clean_on_exit = true

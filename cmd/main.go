@@ -25,61 +25,78 @@ func main() {
 	cfg.loadEnv()
 
 	r := chi.NewRouter()
-
-	if cfg.reqDebug {
-		r.Use(reqDebugMiddleware)
-	}
-
 	r.Use(middleware.Logger)
 
-	// Add all our routes under a sub-router
-	// This allows us to set a custom prefix for all routes
-	r.Route(cfg.routePrefix, func(r chi.Router) {
-		r.Get("/", ok)
-		r.Get("/health*", ok)
-
-		r.Get("/info", systemInfo)
-
-		r.HandleFunc("/status/{code}", statusCode)
-		r.Get("/word", randomWord)
-		r.Get("/word/{count}", randomWord)
-		r.Get("/number", randomNumber)
-		r.Get("/number/{max}", randomNumber)
-		r.Get("/uuid", randomUUID)
-		r.Get("/uuid/{input}", randomUUID)
-
-		r.HandleFunc("/delay/{seconds}", delay)
-		r.HandleFunc("/delay", delay)
-
-		// Route protected by basic auth
-		r.Route("/auth/basic", func(r chi.Router) {
-			r.Use(middleware.BasicAuth("realm", map[string]string{
-				cfg.basicAuthUser: cfg.basicAuthPassword,
-			}))
-
-			r.HandleFunc("/", ok)
-		})
-
-		// Route protected by simple SHA256 JWT auth
-		r.Route("/auth/jwt", func(r chi.Router) {
-			tokenAuth = jwtauth.New("HS256", []byte(cfg.jwtSignKey), nil)
-
-			r.Use(jwtauth.Verifier(tokenAuth))
-			r.Use(jwtauth.Authenticator(tokenAuth))
-
-			r.HandleFunc("/", ok)
-		})
-
-		// Handle fallback
-		if cfg.inspectAll {
-			// Add a catch-all route to inspect & echo requests that don't match any other routes
-			r.HandleFunc("/*", inspect)
-		} else {
-			// Only inspect & echo requests to /inspect and /echo
-			r.HandleFunc("/inspect", inspect)
-			r.HandleFunc("/echo", inspect)
+	// Check for static serving modes
+	if cfg.staticPath != "" {
+		// Serve SPA static files with client-side routing support
+		r.Get(cfg.routePrefix+"*", staticServe)
+		log.Printf("📁 Serving static files from: %s", cfg.staticPath)
+	} else if cfg.spaPath != "" {
+		// Serve static files like an old fashioned web server
+		r.Get(cfg.routePrefix+"*", spaServe)
+		log.Printf("📁 Serving SPA from: %s", cfg.spaPath)
+	} else {
+		// Otherwise, we run the normal debugger & API
+		if cfg.reqDebug {
+			r.Use(reqDebugMiddleware)
 		}
-	})
+
+		// Add all routes under a sub-router
+		// This allows a custom prefix for all routes
+		r.Route(cfg.routePrefix, func(r chi.Router) {
+			r.Get("/", ok)
+			r.Get("/health*", ok)
+
+			r.Get("/info", systemInfo)
+
+			r.HandleFunc("/status/{code}", statusCode)
+			r.Get("/word", randomWord)
+			r.Get("/word/{count}", randomWord)
+			r.Get("/number", randomNumber)
+			r.Get("/number/{max}", randomNumber)
+			r.Get("/uuid", randomUUID)
+			r.Get("/uuid/{input}", randomUUID)
+
+			r.HandleFunc("/delay/{seconds}", delay)
+			r.HandleFunc("/delay", delay)
+
+			// Route protected by basic auth
+			r.Route("/auth/basic", func(subRouter chi.Router) {
+				subRouter.Use(middleware.BasicAuth("realm", map[string]string{
+					cfg.basicAuthUser: cfg.basicAuthPassword,
+				}))
+
+				log.Printf("🔐 Basic auth credentials: %s:%s\n", cfg.basicAuthUser, cfg.basicAuthPassword)
+
+				subRouter.HandleFunc("/", ok)
+			})
+
+			// Route protected by simple SHA256 JWT auth
+			r.Route("/auth/jwt", func(subRouter chi.Router) {
+				tokenAuth = jwtauth.New("HS256", []byte(cfg.jwtSignKey), nil)
+
+				subRouter.Use(jwtauth.Verifier(tokenAuth))
+				subRouter.Use(jwtauth.Authenticator(tokenAuth))
+
+				// Generate a valid JWT token for testing with no claims
+				_, exampleToken, _ := tokenAuth.Encode(map[string]interface{}{})
+				log.Printf("🔑 JWT valid token: %s\n", exampleToken)
+
+				subRouter.HandleFunc("/", ok)
+			})
+
+			// Handle fallback
+			if cfg.inspectAll {
+				// Add a catch-all route to inspect & echo requests that don't match any other routes
+				r.HandleFunc("/*", inspect)
+			} else {
+				// Only inspect & echo requests to /inspect and /echo
+				r.HandleFunc("/inspect", inspect)
+				r.HandleFunc("/echo", inspect)
+			}
+		})
+	}
 
 	server := &http.Server{
 		Addr:              ":" + cfg.port,
@@ -89,11 +106,7 @@ func main() {
 		Handler:           r,
 	}
 
-	// Generate a valid JWT token for testing with no claims
-	_, exampleToken, _ := tokenAuth.Encode(map[string]interface{}{})
-
-	log.Printf("🔐 Basic auth credentials: %s:%s\n", cfg.basicAuthUser, cfg.basicAuthPassword)
-	log.Printf("🔑 JWT valid token: %s\n\n", exampleToken)
+	log.Printf("📂 Route prefix: %s", cfg.routePrefix)
 
 	// Start the server using TLS if configured
 	if cfg.useTLS {
