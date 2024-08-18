@@ -14,8 +14,8 @@ basically like [httpbin](https://github.com/postmanlabs/httpbin) but written in 
 - Download released binaries (Linux x86-64) from GitHub:
 
 ```bash
-curl -sSL https://github.com/benc-uk/http-toolkit/releases/download/v1.0/http-tool -o ./http-tool
-chmod +x ./http-tool
+curl -sSL https://github.com/benc-uk/http-toolkit/releases/download/v1.2/http-toolkit -o ./http-toolkit
+chmod +x ./http-toolkit
 ```
 
 Alternatively if you have Go installed, the following installs the http-toolkit binary into the current directory:
@@ -31,7 +31,7 @@ Images are published on GitHub [here](https://github.com/benc-uk/http-toolkit/pk
 To run as a container simply run:
 
 ```bash
-docker run --rm -it -p 8080:8080 ghcr.io/benc-uk/http-tool:v1.0
+docker run --rm -it -p 8080:8080 ghcr.io/benc-uk/http-toolkit:v1.2
 ```
 
 ## 🏹 Usage
@@ -95,7 +95,7 @@ The server can act as a simple HTTP file server for SPAs and other static conten
 - **Static File Mode**  
   Enable with `STATIC_PATH` env-var or `-static-path` argument. Similar to SPA mode, except requests for missing files or paths will result in a 404, and the contents of directories without an index.html will be listed
 
-If ether of these modes is enabled, all other features are disabled. There is no subpath support so requests must start at the root URL. Sub-paths are supported using route-prefix, but serving SPAs this way is fraught with problems and not recommended.
+If ether of these modes is enabled, all other features are disabled. Sub-paths are supported using route-prefix, but serving SPAs this way is fraught with problems and not recommended.
 
 ### Enabling TLS / HTTPS
 

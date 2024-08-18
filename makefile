@@ -13,7 +13,7 @@ HTTPYAC_PATH := $(REPO_ROOT)/.tools/node_modules/.bin/httpyac
 
 VERSION ?= $(shell git describe --tags --always)
 IMAGE_REG ?= ghcr.io
-IMAGE_NAME ?= benc-uk/http-tool
+IMAGE_NAME ?= benc-uk/http-toolkit
 IMAGE_TAG ?= $(VERSION)
 IMAGE_PREFIX := $(IMAGE_REG)/$(IMAGE_NAME)
 
@@ -48,7 +48,7 @@ push: check-vars ## 📤 Push container image to registry
 
 build: ## 🔨 Run a local build without a container
 	@figlet $@ || true
-	go build -ldflags "-X main.version=$(VERSION)" -o bin/http-tool $(SRC_DIR)/...
+	go build -ldflags "-X main.version=$(VERSION)" -o bin/http-toolkit $(SRC_DIR)/...
 
 run: ## 🏃 Run locally with reload, used for local development
 	@figlet $@ || true
@@ -64,7 +64,7 @@ release: build ## 🚀 Release a new version on GitHub
 	@echo "Releasing version $(VERSION) on GitHub, ctrl+c to cancel"
 	@sleep 5
 	gh release create "$(VERSION)" --title "$(VERSION)" --latest --notes "Release $(VERSION)"
-	gh release upload $(VERSION) bin/http-tool
+	gh release upload $(VERSION) bin/http-toolkit
 
 test: ## 🧪 Run unit tests
 	@figlet $@ || true
