@@ -1,5 +1,9 @@
 package main
 
+// ==== http-toolkit: requests.go =====================================================================================
+// For inspecting + debugging http.Requests into a readable structure & format
+// ====================================================================================================================
+
 import (
 	"bytes"
 	"io"

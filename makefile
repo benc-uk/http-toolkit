@@ -24,7 +24,7 @@ help: ## 💬 This help message :)
 install-tools: ## 🔮 Install dev tools into project .tools directory
 	@figlet $@ || true
 	@$(GOLINT_PATH) > /dev/null 2>&1 || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./.tools/
-	@$(AIR_PATH) -v > /dev/null 2>&1 || ( wget https://github.com/cosmtrek/air/releases/download/v1.51.0/air_1.51.0_linux_amd64 -q -O .tools/air && chmod +x .tools/air )
+	@$(AIR_PATH) -v > /dev/null 2>&1 || (curl -sSL https://github.com/cosmtrek/air/releases/download/v1.51.0/air_1.51.0_linux_amd64 -o .tools/air && chmod +x .tools/air)
 	@$(JUNIT_REPORT_PATH) -v > /dev/null 2>&1 || GOBIN=$(REPO_ROOT)/.tools go install github.com/jstemmer/go-junit-report/v2@latest
 	@$(HTTPYAC_PATH) -v > /dev/null 2>&1 || npm install httpyac@latest --prefix .tools
 	

@@ -1,5 +1,9 @@
 package main
 
+// ==== http-toolkit: handlers.go =====================================================================================
+// Contains all the HTTP handlers these are mounted on various routes in main.go
+// ====================================================================================================================
+
 import (
 	"encoding/json"
 	"fmt"
@@ -16,6 +20,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Used by the info handler to generate some useful system information
 type SystemInfo struct {
 	Hostname     string `json:"hostname"`
 	OS           string `json:"os"`

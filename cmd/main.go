@@ -1,5 +1,10 @@
 package main
 
+// ==== http-toolkit: main.go =========================================================================================
+// This file contains the main entry point for the application, including the HTTP server setup
+// It's compiled into a standalone binary
+// ====================================================================================================================
+
 import (
 	"crypto/tls"
 	"encoding/json"

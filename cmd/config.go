@@ -1,5 +1,10 @@
 package main
 
+// ==== http-toolkit: config.go =======================================================================================
+// This file contains the configuration for the application along with support for
+// command line flags and environment variables
+// ====================================================================================================================
+
 import (
 	"flag"
 	"log"
@@ -22,6 +27,7 @@ type AppConfig struct {
 	staticPath        string
 }
 
+// NewConfig creates a new AppConfig with default values
 func NewConfig() AppConfig {
 	return AppConfig{
 		reqDebug:          true,
