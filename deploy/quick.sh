@@ -22,4 +22,4 @@ echo -e "\e[32m🔨 Deploying http-toolkit to an Azure Container App...\e[0m"
 
 az containerapp up --name http-toolkit \
 --image ghcr.io/benc-uk/http-toolkit:latest \
---target-port 8080
+--target-port 8000

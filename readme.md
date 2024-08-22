@@ -31,7 +31,7 @@ Images are published on GitHub [here](https://github.com/benc-uk/http-toolkit/pk
 To run as a container simply run:
 
 ```bash
-docker run --rm -it -p 8080:8080 ghcr.io/benc-uk/http-toolkit:v1.2
+docker run --rm -it -p 8000:8000 ghcr.io/benc-uk/http-toolkit:v1.2
 ```
 
 ## 🏹 Usage
@@ -68,7 +68,7 @@ Configuration can be done via environmental variables
 
 | Variable            | Description                                                  | Default          |
 | ------------------- | ------------------------------------------------------------ | ---------------- |
-| PORT                | Port to listen on                                            | "8080"           |
+| PORT                | Port to listen on                                            | "8000"           |
 | REQUEST_DEBUG       | Log request details to console                               | true             |
 | BODY_DEBUG          | Include body when inspecting requests                        | true             |
 | INSPECT_FALLBACK    | Unmatched routes return /inspect rather than 404             | true             |
