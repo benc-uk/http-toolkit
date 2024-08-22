@@ -1,0 +1,24 @@
+{
+  "name": "http-toolkit",
+  "image": "mcr.microsoft.com/devcontainers/go:1-1.22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/guiyomh/features/golangci-lint:0": {},
+    "ghcr.io/benc-uk/devc-features/httpyac:1": {},
+    "ghcr.io/benc-uk/devc-features/air:1": {},
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+      "packages": "figlet"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["anweber.vscode-httpyac"]
+    }
+  },
+  "containerEnv": {
+    // Tool path overrides for devcontainer only
+    "HTTPYAC_PATH": "/usr/local/share/nvm/current/bin/httpyac",
+    "AIR_PATH": "/usr/local/bin/air",
+    "GOLINT_PATH": "/go/bin/golangci-lint"
+  }
+}
