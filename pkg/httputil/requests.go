@@ -1,6 +1,6 @@
-package main
+package httputil
 
-// ==== http-toolkit: requests.go =====================================================================================
+// ==== httputils: requests.go =====================================================================================
 // For inspecting + debugging http.Requests into a readable structure & format
 // ====================================================================================================================
 
@@ -25,7 +25,7 @@ type RequestDetails struct {
 }
 
 // Create a RequestDetails struct from an http.Request
-func newRequestDetails(r *http.Request) RequestDetails {
+func NewRequestDetails(r *http.Request, readBody bool) RequestDetails {
 	headers := make(map[string]string)
 	for k, v := range r.Header {
 		headers[k] = strings.Join(v, ",")
@@ -38,7 +38,7 @@ func newRequestDetails(r *http.Request) RequestDetails {
 
 	bodyStr := ""
 
-	if cfg.bodyDebug {
+	if readBody {
 		// Read the body if bodyDebug is enabled
 		body, err := io.ReadAll(r.Body)
 		if err != nil {

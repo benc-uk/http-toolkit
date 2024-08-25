@@ -11,6 +11,7 @@ RUN go mod download
 
 # Copy the source code into the container
 COPY ./cmd ./cmd
+COPY ./pkg ./pkg
 
 # Build the Go binary
 RUN go build -ldflags "-X main.version=${VERSION}" -o http-toolkit ./cmd

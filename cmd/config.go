@@ -7,12 +7,13 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strings"
 )
 
-type AppConfig struct {
+type Config struct {
 	reqDebug          bool
 	bodyDebug         bool
 	inspectAll        bool
@@ -27,9 +28,9 @@ type AppConfig struct {
 	staticPath        string
 }
 
-// NewConfig creates a new AppConfig with default values
-func NewConfig() AppConfig {
-	return AppConfig{
+// NewConfig creates a new AppConfig with all default values
+func NewConfig() Config {
+	return Config{
 		reqDebug:          true,
 		bodyDebug:         true,
 		inspectAll:        true,
@@ -45,7 +46,8 @@ func NewConfig() AppConfig {
 	}
 }
 
-func (cfg *AppConfig) loadFlags() {
+// Load the command line flags passed as arguments into the config
+func (cfg *Config) loadFlags() {
 	printVer := flag.Bool("version", false, "Print version and exit")
 
 	flag.StringVar(&cfg.port, "port", cfg.port, "Port to listen on")
@@ -56,23 +58,31 @@ func (cfg *AppConfig) loadFlags() {
 	flag.StringVar(&cfg.basicAuthUser, "basic-auth-user", cfg.basicAuthUser, "Basic auth username")
 	flag.StringVar(&cfg.basicAuthPassword, "basic-auth-password", cfg.basicAuthPassword, "Basic auth password")
 	flag.StringVar(&cfg.jwtSignKey, "jwt-sign-key", cfg.jwtSignKey, "Signing key for JWT")
-	flag.StringVar(&cfg.certPath, "cert-path", cfg.certPath, "Path to TLS cert & key files")
+	flag.StringVar(&cfg.certPath, "cert-path", cfg.certPath, "Path to directory with TLS cert & key files")
 	flag.StringVar(&cfg.spaPath, "spa-path", cfg.spaPath,
 		"Path to SPA files to serve, default is none and don't serve SPA")
 	flag.StringVar(&cfg.staticPath, "static-path", cfg.staticPath,
 		"Path to static files to serve, default is none and don't serve files")
 
+	flag.Usage = func() {
+		fmt.Printf("http-toolkit %s - A simple HTTP toolkit for debugging and testing", version)
+		fmt.Println("Usage: http-toolkit [flags]")
+		fmt.Println("Flags:")
+		flag.PrintDefaults()
+	}
+
 	flag.Parse()
 
 	if *printVer {
-		println(version)
+		fmt.Println(version)
 		os.Exit(0)
 	}
 }
 
+// Load the environment variables into the config
+//
 //nolint:cyclop
-func (cfg *AppConfig) loadEnv() {
-	// Get PORT environment variable
+func (cfg *Config) loadEnv() {
 	port := os.Getenv("PORT")
 	if port != "" {
 		cfg.port = port
@@ -145,13 +155,13 @@ func (cfg *AppConfig) loadEnv() {
 
 		// Check cert & key files exist
 		if _, err := os.Stat(cfg.certPath + "/cert.pem"); os.IsNotExist(err) {
-			log.Printf("😟 cert.pem not found, TLS will be disabled")
+			log.Printf("😟 cert.pem not found in cert path, TLS will be disabled")
 
 			cfg.useTLS = false
 		}
 
 		if _, err := os.Stat(cfg.certPath + "/key.pem"); os.IsNotExist(err) {
-			log.Printf("😟 key.pem not found, TLS will be disabled")
+			log.Printf("😟 key.pem not found in cert path, TLS will be disabled")
 
 			cfg.useTLS = false
 		}

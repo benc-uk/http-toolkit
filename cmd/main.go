@@ -12,22 +12,23 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/benc-uk/http-toolkit/pkg/httputil"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/jwtauth/v5"
 )
 
-var cfg AppConfig
+var cfg Config
 var tokenAuth *jwtauth.JWTAuth
 var version = "0.0"
 
 func main() {
-	log.Printf("🌐 HTTP Toolkit %s", version)
-
 	// Set up configuration
 	cfg = NewConfig()
 	cfg.loadFlags()
 	cfg.loadEnv()
+
+	log.Printf("🌐 HTTP Toolkit %s", version)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -134,7 +135,7 @@ func main() {
 func reqDebugMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Debug requests to JSON string and log to console
-		reqDetails := newRequestDetails(r)
+		reqDetails := httputil.NewRequestDetails(r, cfg.bodyDebug)
 
 		reqJSON, err := json.MarshalIndent(reqDetails, "", "  ")
 		if err != nil {

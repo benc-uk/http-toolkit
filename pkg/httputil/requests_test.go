@@ -1,6 +1,6 @@
 // Created by Copilot, don't blame me if the code is shonky!
 
-package main
+package httputil
 
 import (
 	"net/http"
@@ -60,13 +60,12 @@ func TestNewRequestDetails(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cfg.bodyDebug = tt.bodyDebug
 			req := httptest.NewRequest(tt.method, tt.url, strings.NewReader(tt.body))
 			for k, v := range tt.headers {
 				req.Header.Set(k, v)
 			}
 
-			rd := newRequestDetails(req)
+			rd := NewRequestDetails(req, tt.bodyDebug)
 
 			if rd.Method != tt.method {
 				t.Errorf("expected method %s, got %s", tt.method, rd.Method)

@@ -15,6 +15,8 @@ import (
 
 	"math/rand"
 
+	"github.com/benc-uk/http-toolkit/pkg/httputil"
+	"github.com/benc-uk/http-toolkit/pkg/stringutil"
 	"github.com/elastic/go-sysinfo"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
@@ -39,7 +41,7 @@ func inspect(w http.ResponseWriter, r *http.Request) {
 
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
-	_ = enc.Encode(newRequestDetails(r))
+	_ = enc.Encode(httputil.NewRequestDetails(r, cfg.bodyDebug))
 }
 
 func ok(w http.ResponseWriter, r *http.Request) {
@@ -104,15 +106,8 @@ func randomWord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Generate a random words and append them to a string
-	wordsOut := make([]string, 0)
-	for i := 0; i < countInt; i++ {
-		//nolint:gosec
-		wordsOut = append(wordsOut, words[rand.Intn(len(words))])
-	}
-
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(strings.Join(wordsOut, " ")))
+	_, _ = w.Write([]byte(strings.Join(stringutil.RandomWords(countInt), " ")))
 }
 
 func randomNumber(w http.ResponseWriter, r *http.Request) {

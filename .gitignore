@@ -1,6 +1,5 @@
 tmp/
 .tools/
-bin/**
-*.xml
-report/**
+bin/
+report/
 local/
