@@ -14,7 +14,7 @@ basically like [httpbin](https://github.com/postmanlabs/httpbin) but written in 
 - Download released binaries (Linux x86-64) from GitHub:
 
 ```bash
-curl -sSL https://github.com/benc-uk/http-toolkit/releases/download/v1.2/http-toolkit -o ./http-toolkit
+curl -sSL https://github.com/benc-uk/http-toolkit/releases/download/v1.3/http-toolkit -o ./http-toolkit
 chmod +x ./http-toolkit
 ```
 
@@ -31,7 +31,7 @@ Images are published on GitHub [here](https://github.com/benc-uk/http-toolkit/pk
 To run as a container simply run:
 
 ```bash
-docker run --rm -it -p 8000:8000 ghcr.io/benc-uk/http-toolkit:v1.2
+docker run --rm -it -p 8000:8000 ghcr.io/benc-uk/http-toolkit:v1.3
 ```
 
 ## 🏹 Usage
@@ -134,7 +134,7 @@ You can interactively run & send the requests in the `api/tests.http` file using
 For example
 
 ```http
-GET http://{{ENDPOINT}}/info
+GET http://localhost:8000/info
 
 ?? status == 200
 ?? body uptime isString
