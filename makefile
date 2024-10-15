@@ -90,8 +90,12 @@ test-api-report: ## 📜 Run integration tests with report
 	$(HTTPYAC_PATH) api/tests.http --all --junit > report/api-tests.xml
 	@fuser -k 8000/tcp || true
 
-version: ## 📝 Show current version
+version: ## 🥇 Show current version
 	@echo $(VERSION)
+
+generate-spec: ## 🧁 Generate OpenAPI spec
+	@figlet $@ || true
+	api/specs/generate.sh
 
 check-vars:
 	@if [[ -z "${IMAGE_REG}" ]]; then echo "💥 Error! Required variable IMAGE_REG is not set!"; exit 1; fi

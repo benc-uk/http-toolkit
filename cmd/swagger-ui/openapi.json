@@ -380,15 +380,15 @@
     "/health": {
       "get": {
         "operationId": "Base_health",
-        "description": "Check the health of the service, always returns 200 OK",
+        "description": "Check the health of the service, always returns 200 OK, /healthz is also available",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Vanilla text/plain response",
+            "description": "The request has succeeded.",
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/OK"
                 }
               }
             }
