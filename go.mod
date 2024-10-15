@@ -1,6 +1,6 @@
 module github.com/benc-uk/http-toolkit
 
-go 1.22.1
+go 1.23.2
 
 require (
 	github.com/elastic/go-sysinfo v1.14.0

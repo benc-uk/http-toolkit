@@ -1,0 +1,828 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HTTP Toolkit",
+    "version": "1.4.0"
+  },
+  "tags": [
+    {
+      "name": "Base Routes"
+    },
+    {
+      "name": "Inspect Routes"
+    },
+    {
+      "name": "Wildcard Inspection Routes"
+    },
+    {
+      "name": "Utility Routes"
+    },
+    {
+      "name": "Authenticated Routes"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "Base_ok",
+        "description": "Get a simple OK response",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OK"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Base Routes"
+        ]
+      }
+    },
+    "/anything/{extraPath}": {
+      "get": {
+        "operationId": "Wildcard_inspectAnything",
+        "description": "Any route or path that doesn't match other operations is automatically inspected, e.g. /blah/cheese/shoe will still return the details of the request",
+        "parameters": [
+          {
+            "name": "extraPath",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "foo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Wildcard Inspection Routes"
+        ]
+      },
+      "post": {
+        "operationId": "Wildcard_inspectAnythingPost",
+        "description": "Any route or path that doesn't match other operations is automatically inspected, e.g. /blah/cheese/shoe will still return the details of the request",
+        "parameters": [
+          {
+            "name": "extraPath",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "foo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Wildcard Inspection Routes"
+        ]
+      },
+      "put": {
+        "operationId": "Wildcard_inspectAnythingPut",
+        "description": "Any route or path that doesn't match other operations is automatically inspected, e.g. /blah/cheese/shoe will still return the details of the request",
+        "parameters": [
+          {
+            "name": "extraPath",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "foo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Wildcard Inspection Routes"
+        ]
+      },
+      "delete": {
+        "operationId": "Wildcard_inspectAnythingDelete",
+        "description": "Any route or path that doesn't match other operations is automatically inspected, e.g. /blah/cheese/shoe will still return the details of the request",
+        "parameters": [
+          {
+            "name": "extraPath",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "foo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Wildcard Inspection Routes"
+        ]
+      },
+      "patch": {
+        "operationId": "Wildcard_inspectAnythingPatch",
+        "description": "Any route or path that doesn't match other operations is automatically inspected, e.g. /blah/cheese/shoe will still return the details of the request",
+        "parameters": [
+          {
+            "name": "extraPath",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "foo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Wildcard Inspection Routes"
+        ]
+      }
+    },
+    "/auth/basic": {
+      "get": {
+        "operationId": "Auth_basicAuth",
+        "description": "Route is protected by basic auth, see docs for the credentials",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OK"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "403": {
+            "description": "Access is forbidden."
+          }
+        },
+        "tags": [
+          "Authenticated Routes"
+        ],
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "Auth_basicAuthPost",
+        "description": "Route is protected by basic auth, see docs for the credentials",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OK"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "403": {
+            "description": "Access is forbidden."
+          }
+        },
+        "tags": [
+          "Authenticated Routes"
+        ],
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/jwt": {
+      "get": {
+        "operationId": "Auth_jwtAuth",
+        "description": "Route is protected by SHA256 JWT auth, see docs for obtaining the token",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OK"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "403": {
+            "description": "Access is forbidden."
+          }
+        },
+        "tags": [
+          "Authenticated Routes"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "Auth_jwtAuthPost",
+        "description": "Route is protected by basic auth, see docs for the credentials",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OK"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "403": {
+            "description": "Access is forbidden."
+          }
+        },
+        "tags": [
+          "Authenticated Routes"
+        ],
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ]
+      }
+    },
+    "/delay": {
+      "get": {
+        "operationId": "Utils_delayRandom",
+        "description": "Delay the response by 1 to 10 seconds randomly",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    },
+    "/delay/{seconds}": {
+      "get": {
+        "operationId": "Utils_delay",
+        "description": "Delay the response by the specified number of seconds",
+        "parameters": [
+          {
+            "name": "seconds",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "Base_health",
+        "description": "Check the health of the service, always returns 200 OK",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Base Routes"
+        ]
+      }
+    },
+    "/info": {
+      "get": {
+        "operationId": "Base_info",
+        "description": "Get system information",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Base Routes"
+        ]
+      }
+    },
+    "/inspect": {
+      "get": {
+        "operationId": "Inspect_inspect",
+        "description": "Inspect the incoming HTTP request and return the details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Inspect Routes"
+        ]
+      },
+      "post": {
+        "operationId": "Inspect_inspectPost",
+        "description": "Inspect the incoming HTTP request and return the details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Inspect Routes"
+        ]
+      },
+      "put": {
+        "operationId": "Inspect_inspectPut",
+        "description": "Inspect the incoming HTTP request and return the details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Inspect Routes"
+        ]
+      },
+      "delete": {
+        "operationId": "Inspect_inspectDelete",
+        "description": "Inspect the incoming HTTP request and return the details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Inspect Routes"
+        ]
+      },
+      "patch": {
+        "operationId": "Inspect_inspectPatch",
+        "description": "Inspect the incoming HTTP request and return the details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Inspect Routes"
+        ]
+      }
+    },
+    "/number": {
+      "get": {
+        "operationId": "Utils_number",
+        "description": "Get a random number",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    },
+    "/number/{max}": {
+      "get": {
+        "operationId": "Utils_numberMax",
+        "description": "Get a random number up to the specified maximum",
+        "parameters": [
+          {
+            "name": "max",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    },
+    "/status/{code}": {
+      "get": {
+        "operationId": "Utils_status",
+        "description": "Get a response with the specified status code",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    },
+    "/uuid": {
+      "get": {
+        "operationId": "Utils_uuid",
+        "description": "Get a random UUID",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    },
+    "/uuid/{input}": {
+      "get": {
+        "operationId": "Utils_uuidFrom",
+        "description": "Get a UUID generated from the input string",
+        "parameters": [
+          {
+            "name": "input",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    },
+    "/word": {
+      "get": {
+        "operationId": "Utils_word",
+        "description": "Get a random word",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    },
+    "/word/{count}": {
+      "get": {
+        "operationId": "Utils_words",
+        "description": "Get a number of random words",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vanilla text/plain response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utility Routes"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OK": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "default": "OK"
+          }
+        },
+        "description": "Simple OK response"
+      },
+      "RequestInfo": {
+        "type": "object",
+        "required": [
+          "method",
+          "path",
+          "remoteAddr",
+          "headers",
+          "timestamp"
+        ],
+        "properties": {
+          "method": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "remoteAddr": {
+            "type": "string"
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "query": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "body": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        },
+        "description": "Details of an incoming HTTP request"
+      },
+      "SystemInfo": {
+        "type": "object",
+        "required": [
+          "hostname",
+          "os",
+          "architecture",
+          "cpuCount",
+          "memory",
+          "goVersion",
+          "clientAddr",
+          "serverHost",
+          "uptime"
+        ],
+        "properties": {
+          "hostname": {
+            "type": "string"
+          },
+          "os": {
+            "type": "string"
+          },
+          "architecture": {
+            "type": "string"
+          },
+          "cpuCount": {
+            "type": "integer"
+          },
+          "memory": {
+            "type": "string"
+          },
+          "goVersion": {
+            "type": "string"
+          },
+          "clientAddr": {
+            "type": "string"
+          },
+          "serverHost": {
+            "type": "string"
+          },
+          "uptime": {
+            "type": "string"
+          }
+        },
+        "description": "System information"
+      }
+    },
+    "securitySchemes": {
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

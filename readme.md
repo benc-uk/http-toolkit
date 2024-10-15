@@ -31,7 +31,7 @@ Images are published on GitHub [here](https://github.com/benc-uk/http-toolkit/pk
 To run as a container simply run:
 
 ```bash
-docker run --rm -it -p 8000:8000 ghcr.io/benc-uk/http-toolkit:v1.3
+docker run --rm -it -p 8000:8000 ghcr.io/benc-uk/http-toolkit:latest
 ```
 
 ## 🏹 Usage
@@ -60,6 +60,8 @@ GET /uuid/{seconds}  - Delay a response
 
 ANY /auth/basic      - Protected by basic auth, see config for credentials
 ANY /auth/jwt        - Protected by JWT (HMAC-SHA256), see config for signing key
+
+ANY /docs            - Swagger UI and OpenAPI spec
 ```
 
 ## 🛠️ Config
@@ -125,9 +127,15 @@ test-api-report      📜 Run integration tests with report
 version              📝 Show current version
 ```
 
+### 📜 API Specs
+
+The API spec is available as OpenAPI v3 document in [swagger-ui/openapi.json](swagger-ui/openapi.json). This is generated using [TypeSpec](https://typespec.io/) from the source in [api/specs/main.tsp](api/specs/main.tsp). To compile this and generate the OpenAPI JSON from the TypeSpec run the `generate.sh` bash script, you will need Node.js and NPM in order to run this. This is not required when building the app, as the openapi.json is committed to the repo.
+
+When the service is running the Swagger UI is served from the `/docs` endpoint, along with the OpenAPI JSON file at `/docs/openapi.json`
+
 ### 🧪 Testing
 
-This project uses a HTTP file (`api/tests.http`) that can be used a few different ways, you can instal the [VSCode REST CLient](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) or [httpYac](https://marketplace.visualstudio.com/items?itemName=anweber.vscode-httpyac), [httpYac](https://httpyac.github.io/) is preferred as it supports many more features.
+This project uses a HTTP file (`api/tests.http`) that can be used a few different ways, you can instal the [VSCode REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) or [httpYac](https://marketplace.visualstudio.com/items?itemName=anweber.vscode-httpyac), [httpYac](https://httpyac.github.io/) is preferred as it supports many more features.
 
 You can interactively run & send the requests in the `api/tests.http` file using these extensions, but the main reason to use httpYac, is it has a much richer language & the support of assertions which can turn each of the example requests into integration tests too 👌
 
