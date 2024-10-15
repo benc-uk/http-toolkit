@@ -408,9 +408,9 @@
           "200": {
             "description": "The request has succeeded.",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OK"
+                  "$ref": "#/components/schemas/SystemInfo"
                 }
               }
             }

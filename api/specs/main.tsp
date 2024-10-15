@@ -60,12 +60,12 @@ interface Base {
   @get ok(): OK;
 
   @route("/health")
-  @doc("Check the health of the service, always returns 200 OK")
-  @get health(): PlainText;
+  @doc("Check the health of the service, always returns 200 OK, /healthz is also available")
+  @get health(): OK;
 
   @route("/info")
   @doc("Get system information")
-  @get info(): OK;
+  @get info(): SystemInfo;
 }
 
 @tag("Inspect Routes")
