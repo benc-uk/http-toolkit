@@ -53,7 +53,6 @@ func main() {
 		r.Route(cfg.routePrefix, func(r chi.Router) {
 			r.Get("/", ok)
 			r.Get("/health*", ok)
-
 			r.Get("/info", systemInfo)
 
 			r.HandleFunc("/status/{code}", statusCode)
@@ -90,6 +89,12 @@ func main() {
 				log.Printf("🔑 JWT valid token: %s\n", exampleToken)
 
 				subRouter.HandleFunc("/", ok)
+			})
+
+			// Serve the Swagger UI from the /docs route
+			r.Get("/docs/*", docsServe)
+			r.Get("/docs", func(w http.ResponseWriter, r *http.Request) {
+				http.Redirect(w, r, "/docs/", http.StatusMovedPermanently)
 			})
 
 			// Handle fallback

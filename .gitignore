@@ -3,3 +3,5 @@ tmp/
 bin/
 report/
 local/
+node_modules/
+tsp-output/

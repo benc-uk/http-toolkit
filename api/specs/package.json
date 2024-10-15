@@ -1,0 +1,16 @@
+{
+  "name": "http-toolkit",
+  "version": "1.4.0",
+  "type": "module",
+  "peerDependencies": {
+    "@typespec/compiler": "latest",
+    "@typespec/http": "latest",
+    "@typespec/openapi3": "latest"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "latest",
+    "@typespec/http": "latest",
+    "@typespec/openapi3": "latest"
+  },
+  "private": true
+}

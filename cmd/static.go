@@ -61,3 +61,14 @@ func staticServe(w http.ResponseWriter, r *http.Request) {
 
 	http.FileServer(http.Dir(cfg.staticPath)).ServeHTTP(w, r)
 }
+
+// docsServe will serve the Swagger UI from the swagger-ui directory
+func docsServe(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+
+	// Remove the route prefix from the URL path
+	routePrefixNoSlash := strings.TrimSuffix(cfg.routePrefix+"docs/", "/")
+	r.URL.Path = strings.ReplaceAll(r.URL.Path, routePrefixNoSlash, "")
+
+	http.FileServer(http.Dir("swagger-ui")).ServeHTTP(w, r)
+}

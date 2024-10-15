@@ -60,6 +60,8 @@ GET /uuid/{seconds}  - Delay a response
 
 ANY /auth/basic      - Protected by basic auth, see config for credentials
 ANY /auth/jwt        - Protected by JWT (HMAC-SHA256), see config for signing key
+
+ANY /docs            - Swagger UI and OpenAPI spec
 ```
 
 ## 🛠️ Config
@@ -124,6 +126,10 @@ test-api             🔬 Run integration tests
 test-api-report      📜 Run integration tests with report
 version              📝 Show current version
 ```
+
+### 📜 API Specs
+
+The API spec is available as OpenAPI v3 document in [swagger-ui/openapi.json](swagger-ui/openapi.json). This is generated using [TypeSpec](https://typespec.io/) from the source in [api/specs/main.tsp](api/specs/main.tsp). To compile this and generate the OpenAPI JSON from the TypeSpec run the `generate.sh` bash script, you will need Node.js and NPM in order to run this.
 
 ### 🧪 Testing
 

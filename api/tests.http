@@ -141,3 +141,18 @@ POST http://{{ENDPOINT}}/auth/jwt
 Authorization: Bearer {{JWT_TOKEN}}
 
 ?? status == 200
+
+
+### Docs route
+GET http://{{ENDPOINT}}/docs
+
+?? status == 200
+?? body includes Swagger UI
+
+
+### OpenAPI schema
+GET http://{{ENDPOINT}}/docs/openapi.json
+
+?? status == 200
+?? header content-type == application/json
+?? body info.title == HTTP Toolkit

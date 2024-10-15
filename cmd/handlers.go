@@ -169,7 +169,8 @@ func randomUUID(w http.ResponseWriter, r *http.Request) {
 func delay(w http.ResponseWriter, r *http.Request) {
 	delay := chi.URLParam(r, "seconds")
 	if delay == "" {
-		delay = "1"
+		// Random delay between 1 and 10 seconds
+		delay = strconv.Itoa(rand.Intn(10) + 1)
 	}
 
 	delayInt, err := strconv.Atoi(delay)
