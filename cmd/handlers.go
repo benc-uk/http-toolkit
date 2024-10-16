@@ -33,8 +33,21 @@ type SystemInfo struct {
 	ClientAddr   string `json:"clientAddr"`
 	ServerHost   string `json:"serverHost"`
 	Uptime       string `json:"uptime"`
+	Version      string `json:"version"`
 }
 
+// Reply with a simple JSON response
+func simpleResponse(val string, w http.ResponseWriter) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "  ")
+	_ = enc.Encode(struct {
+		Value string `json:"value"`
+	}{Value: val})
+}
+
+// Inspect the incoming request and return details
 func inspect(w http.ResponseWriter, r *http.Request) {
 	// Return a JSON response with the request details
 	w.Header().Set("Content-Type", "application/json")
@@ -44,11 +57,12 @@ func inspect(w http.ResponseWriter, r *http.Request) {
 	_ = enc.Encode(httputil.NewRequestDetails(r, cfg.bodyDebug))
 }
 
+// Return a simple OK response
 func ok(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("OK"))
+	simpleResponse("OK", w)
 }
 
+// Return the system details
 func systemInfo(w http.ResponseWriter, r *http.Request) {
 	host, _ := sysinfo.Host()
 	mem, err := host.Memory()
@@ -68,6 +82,7 @@ func systemInfo(w http.ResponseWriter, r *http.Request) {
 		ClientAddr:   r.RemoteAddr,
 		ServerHost:   r.Host,
 		Uptime:       host.Info().Uptime().String(),
+		Version:      version,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -77,6 +92,7 @@ func systemInfo(w http.ResponseWriter, r *http.Request) {
 	_ = enc.Encode(info)
 }
 
+// Return the status code specified in the URL
 func statusCode(w http.ResponseWriter, r *http.Request) {
 	code := r.PathValue("code")
 	if code == "" {
@@ -92,6 +108,7 @@ func statusCode(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte(http.StatusText(status)))
 }
 
+// Return a random word or words
 func randomWord(w http.ResponseWriter, r *http.Request) {
 	count := chi.URLParam(r, "count")
 	if count == "" {
@@ -106,10 +123,12 @@ func randomWord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(strings.Join(stringutil.RandomWords(countInt), " ")))
+	words := strings.Join(stringutil.RandomWords(countInt), " ")
+
+	simpleResponse(words, w)
 }
 
+// Return a random number
 func randomNumber(w http.ResponseWriter, r *http.Request) {
 	max := chi.URLParam(r, "max")
 	if max == "" {
@@ -124,13 +143,10 @@ func randomNumber(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Generate a random number between 0 and max
-	w.WriteHeader(http.StatusOK)
-
-	//nolint:sec
-	_, _ = w.Write([]byte(strconv.Itoa(rand.Intn(maxInt))))
+	simpleResponse(strconv.Itoa(rand.Intn(maxInt)), w)
 }
 
+// Return a random UUID
 func randomUUID(w http.ResponseWriter, r *http.Request) {
 	input := chi.URLParam(r, "input")
 
@@ -162,10 +178,10 @@ func randomUUID(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(u.String()))
+	simpleResponse(u.String(), w)
 }
 
+// Return after a delay
 func delay(w http.ResponseWriter, r *http.Request) {
 	delay := chi.URLParam(r, "seconds")
 	if delay == "" {
@@ -183,6 +199,5 @@ func delay(w http.ResponseWriter, r *http.Request) {
 
 	time.Sleep(time.Duration(delayInt) * time.Second)
 
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("OK"))
+	simpleResponse(fmt.Sprintf("Delayed for %ds", delayInt), w)
 }
