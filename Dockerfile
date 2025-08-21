@@ -23,6 +23,7 @@ FROM alpine:3.20
 
 # Copy the built binary from the builder stage
 COPY --from=builder /build/http-toolkit /http-toolkit
+COPY cmd/swagger-ui ./swagger-ui
 
 # Set the entry point to run the Go binary
 ENTRYPOINT ["/http-toolkit"]
