@@ -65,7 +65,7 @@ func (cfg *Config) loadFlags() {
 		"Path to static files to serve, default is none and don't serve files")
 
 	flag.Usage = func() {
-		fmt.Printf("http-toolkit %s - A simple HTTP toolkit for debugging and testing", version)
+		fmt.Printf("http-toolkit %s - A HTTP toolkit for debugging and testing", version)
 		fmt.Println("Usage: http-toolkit [flags]")
 		fmt.Println("Flags:")
 		flag.PrintDefaults()

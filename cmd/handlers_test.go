@@ -29,9 +29,14 @@ func TestOkHandler(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
+	var response map[string]string
+	if err := json.Unmarshal(rr.Body.Bytes(), &response); err != nil {
+		t.Errorf("handler returned invalid JSON: %v", err)
+	}
+
 	expected := "OK"
-	if rr.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
+	if response["message"] != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", response["message"], expected)
 	}
 }
 
@@ -78,6 +83,7 @@ func TestSystemInfoHandler(t *testing.T) {
 		t.Error("handler returned empty memory")
 	}
 }
+
 func TestDelayHandler(t *testing.T) {
 	req, err := http.NewRequest(http.MethodGet, "/delay/2", nil)
 	if err != nil {
@@ -100,9 +106,14 @@ func TestDelayHandler(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v, want %v", status, http.StatusOK)
 	}
 
-	expected := "OK"
-	if rr.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v, want %v", rr.Body.String(), expected)
+	response := make(map[string]int)
+	if err := json.Unmarshal(rr.Body.Bytes(), &response); err != nil {
+		t.Errorf("handler returned invalid JSON: %v", err)
+	}
+
+	expected := 2
+	if response["delayTime"] != expected {
+		t.Errorf("handler returned unexpected delay time: got %v, want %v", response["delayTime"], expected)
 	}
 
 	duration := endTime.Sub(startTime)
@@ -111,6 +122,7 @@ func TestDelayHandler(t *testing.T) {
 		t.Errorf("handler did not delay for expected duration: got %v, want at least %v", duration, expectedDuration)
 	}
 }
+
 func TestRandomUUID(t *testing.T) {
 	// Test case 1: No input
 	req, err := http.NewRequest(http.MethodGet, "/uuid", nil)
@@ -142,9 +154,14 @@ func TestRandomUUID(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v, want %v", status, http.StatusOK)
 	}
 
-	// Check that the response body is a valid UUID
-	body := rr.Body.String()
-	if _, err := uuid.Parse(body); err != nil {
+	// Check that the response in json
+	var response map[string]string
+	if err := json.Unmarshal(rr.Body.Bytes(), &response); err != nil {
+		t.Errorf("handler returned invalid JSON: %v", err)
+	}
+
+	// Check that the response has a UUID
+	if _, err := uuid.Parse(response["uuid"]); err != nil {
 		t.Errorf("handler returned invalid UUID: %v", err)
 	}
 }

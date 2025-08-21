@@ -18,7 +18,7 @@ if [ ! -d "$DIR/node_modules" ]; then
 fi
 
 echo "### Generating OpenAPI spec from TypeScript"
-node $DIR/node_modules/.bin/tsp compile --output-dir $DIR $DIR/main.tsp
+node $DIR/node_modules/.bin/tsp compile --output-dir=$DIR $DIR/main.tsp
 
 echo "### Copying generated spec to swagger-ui"
 cp $DIR/@typespec/openapi3/openapi.json $REPO_ROOT/cmd/swagger-ui/openapi.json

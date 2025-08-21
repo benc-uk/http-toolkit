@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
 # Quick deployment script for http-toolkit to Azure Container Apps
+# This is not intended as a general purpose script, so modify as needed
 
 which az > /dev/null || { echo -e "💥 Error! Azure CLI is not installed. https://aka.ms/azure-cli"; exit 1; }
 
@@ -20,6 +23,10 @@ fi
 
 echo -e "\e[32m🔨 Deploying http-toolkit to an Azure Container App...\e[0m"
 
+# We deploy from source as `az containerapp up` supports this, neat!
 az containerapp up --name http-toolkit \
---image ghcr.io/benc-uk/http-toolkit:latest \
---target-port 8000
+--source "$REPO_ROOT" \
+--target-port 8000 \
+--resource-group http-toolkit \
+--environment http-toolkit \
+--location uksouth

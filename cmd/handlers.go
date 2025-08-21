@@ -37,14 +37,23 @@ type SystemInfo struct {
 }
 
 // Reply with a simple JSON response
-func simpleResponse(val string, w http.ResponseWriter) {
-	w.WriteHeader(http.StatusOK)
+func simpleStringResponse(name string, val string, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
+
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
-	_ = enc.Encode(struct {
-		Value string `json:"value"`
-	}{Value: val})
+
+	_ = enc.Encode(map[string]string{name: val})
+}
+
+// Reply with a simple JSON response
+func simpleIntResponse(name string, val int, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "  ")
+
+	_ = enc.Encode(map[string]int{name: val})
 }
 
 // Inspect the incoming request and return details
@@ -59,7 +68,7 @@ func inspect(w http.ResponseWriter, r *http.Request) {
 
 // Return a simple OK response
 func ok(w http.ResponseWriter, r *http.Request) {
-	simpleResponse("OK", w)
+	simpleStringResponse("message", "OK", w)
 }
 
 // Return the system details
@@ -125,7 +134,7 @@ func randomWord(w http.ResponseWriter, r *http.Request) {
 
 	words := strings.Join(stringutil.RandomWords(countInt), " ")
 
-	simpleResponse(words, w)
+	simpleStringResponse("words", words, w)
 }
 
 // Return a random number
@@ -143,7 +152,7 @@ func randomNumber(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	simpleResponse(strconv.Itoa(rand.Intn(maxInt)), w)
+	simpleIntResponse("randNum", rand.Intn(maxInt), w)
 }
 
 // Return a random UUID
@@ -178,7 +187,7 @@ func randomUUID(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	simpleResponse(u.String(), w)
+	simpleStringResponse("uuid", u.String(), w)
 }
 
 // Return after a delay
@@ -199,5 +208,5 @@ func delay(w http.ResponseWriter, r *http.Request) {
 
 	time.Sleep(time.Duration(delayInt) * time.Second)
 
-	simpleResponse(fmt.Sprintf("Delayed for %ds", delayInt), w)
+	simpleIntResponse("delayTime", delayInt, w)
 }

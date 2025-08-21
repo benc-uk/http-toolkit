@@ -1,8 +1,9 @@
 # 🌐 HTTP Toolkit
 
-This is a simple backend service for testing and debugging HTTP requests. It can be deployed when you need to test some
-networking or HTTP routing in your environment, or if you simply need a "Hello World" type thingamajig to deploy. It's
-basically like [httpbin](https://github.com/postmanlabs/httpbin) but written in Go and it's mine.
+This is a utility backend service for testing and debugging HTTP requests. It can be deployed when you need to test some
+networking or HTTP routing in your environment, or if you simply need a "Hello World" type thingamajig to deploy. It
+provides request inspection (echo'ed back to the requester) and logging to assist in troubleshooting scenarios.  
+It's basically like httpbin but written in Go and by me.
 
 ![](https://img.shields.io/github/license/benc-uk/http-toolkit)
 ![](https://img.shields.io/github/last-commit/benc-uk/http-toolkit)
@@ -14,7 +15,7 @@ basically like [httpbin](https://github.com/postmanlabs/httpbin) but written in 
 - Download released binaries (Linux x86-64) from GitHub:
 
 ```bash
-curl -sSL https://github.com/benc-uk/http-toolkit/releases/download/v1.3/http-toolkit -o ./http-toolkit
+curl -sSL https://github.com/benc-uk/http-toolkit/releases/download/v1.4/http-toolkit -o ./http-toolkit
 chmod +x ./http-toolkit
 ```
 
@@ -110,21 +111,21 @@ cert of course but you'll get warnings when making requests of course
 Use the Makefile, it's super handy and very nice 😎
 
 ```
-help                 💬 This help message :)
 install-tools        🔮 Install dev tools into project .tools directory
 lint                 🔍 Lint & format check only, sets exit code on error for CI
 lint-fix             📝 Lint & format, attempts to fix errors & modify code
-image                📦 Build container image from Dockerfile
+image                📦 Build container image
 push                 📤 Push container image to registry
-build                🔨 Run a local build without a container
-run                  🏃 Run locally with reload, used for local development
+build                🔨 Build binary
+run                  🏃 Run with hot reload, used for local development
 clean                🧹 Clean up, remove dev data and files
 release              🚀 Release a new version on GitHub
 test                 🧪 Run unit tests
 test-report          📜 Run unit tests with report
 test-api             🔬 Run integration tests
 test-api-report      📜 Run integration tests with report
-version              📝 Show current version
+version              🥇 Show current version
+generate-spec        🧁 Generate OpenAPI spec
 ```
 
 ### 📜 API Specs

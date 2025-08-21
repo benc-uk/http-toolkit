@@ -14,6 +14,7 @@
 GET http://{{ENDPOINT}}
 
 ?? status == 200
+?? body message == OK
 
 
 ### System info
@@ -58,14 +59,13 @@ Content-Type: application/json
 GET http://{{ENDPOINT}}/healthy
 
 ?? status == 200
-?? body includes OK
 
 
 ### Random numbers
 GET http://{{ENDPOINT}}/number/5000
 
 ?? status == 200
-?? body matches ^\d+
+?? body randNum isNumber
 
 
 ### Random words
@@ -92,15 +92,15 @@ PUT http://{{ENDPOINT}}/this/goes/somwhere
 GET http://{{ENDPOINT}}/uuid/i-like-jam-on-toast
 
 ?? status == 200
-?? body matches ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-?? body startsWith 692d6c69
+?? body uuid matches ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+?? body uuid startsWith 692d6c69
 
 
 ### UUID generation random
 GET http://{{ENDPOINT}}/uuid
 
 ?? status == 200
-?? body matches ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+?? body uuid matches ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
 
 
 ### Basic auth fails without credentials
@@ -156,3 +156,10 @@ GET http://{{ENDPOINT}}/docs/openapi.json
 ?? status == 200
 ?? header content-type == application/json
 ?? body info.title == HTTP Toolkit
+
+
+### Delay response
+GET http://{{ENDPOINT}}/delay/2
+
+?? status == 200
+?? body delayTime == 2
